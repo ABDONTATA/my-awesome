@@ -4,10 +4,11 @@ import { Menu, User, ShoppingBag, Settings } from "lucide-react";
 import { Link } from "react-router-dom";
 import { ModeToggle } from "@/components/ModeToggle";
 import { Button } from "@/components/ui/button";
+import { useAuth } from "@/Contexts/AuthProvider";
 
 export function Navbar() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
-
+  const {isAuthenticated} = useAuth();
   const navItems = [
     { name: "Home", path: "/" },
     { name: "Products", path: "/products" },
@@ -40,10 +41,17 @@ export function Navbar() {
           
           <div className="flex items-center space-x-4">
             <ModeToggle />
-            <Link to="/login" className="hidden md:flex luxury-link">
-              <User className="h-5 w-5 mr-1" />
-              <span>Login</span>
-            </Link>
+            {isAuthenticated ? (
+              <Link to="/profile" className="hidden md:flex luxury-link">
+                <User className="h-5 w-5 mr-1" />
+                <span>Profile</span>
+              </Link>
+            ) : (
+              <Link to="/login" className="hidden md:flex luxury-link">
+                <User className="h-5 w-5 mr-1" />
+                <span>login</span>
+              </Link>
+            )}
             <Link to="/settings" className="hidden md:flex luxury-link">
               <Settings className="h-5 w-5 mr-1" />
               <span>Settings</span>
@@ -66,7 +74,7 @@ export function Navbar() {
           </div>
         </div>
         
-        {/* Mobile Navigation */}
+        {}
         {isMenuOpen && (
           <div className="md:hidden pt-4 pb-2 animate-slide-down">
             <div className="flex flex-col space-y-4">

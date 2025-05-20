@@ -10,7 +10,7 @@ import { toast } from "@/components/ui/sonner";
 
 const Index = () => {
   useEffect(() => {
-    // Display welcome toast
+   
     setTimeout(() => {
       toast("Welcome to LUXE", {
         description: "Discover our exclusive collection of luxury products.",

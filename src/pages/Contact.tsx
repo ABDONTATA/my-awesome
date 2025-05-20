@@ -48,18 +48,18 @@ const Contact = () => {
             <div className="bg-secondary/50 p-4 rounded-lg">
               <h3 className="text-lg font-semibold mb-2">Our Office</h3>
               <p className="text-muted-foreground">
-                123 Luxury Avenue<br />
-                New York, NY 10001<br />
-                United States
+                123 TABOUNTE OURZAZATE<br />
+                OFICE BROTHER, NY 10001<br />
+                MOROCO
               </p>
             </div>
             
             <div className="bg-secondary/50 p-4 rounded-lg">
               <h3 className="text-lg font-semibold mb-2">Contact Information</h3>
               <p className="text-muted-foreground">
-                Email: info@luxurycompany.com<br />
-                Phone: +1 (555) 123-4567<br />
-                Hours: Mon-Fri, 9AM - 5PM EST
+                Email: ABDEMOUAD@gmail.com<br />
+                Phone: o6-45-87-23-90 <br />
+                Hours: 24/7
               </p>
             </div>
           </div>

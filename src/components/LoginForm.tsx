@@ -8,10 +8,13 @@ import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle }
 import { Checkbox } from "@/components/ui/checkbox";
 import { Mail, Lock } from "lucide-react";
 import { toast } from "@/components/ui/sonner";
-
+import { useAuth} from "@/Contexts/AuthProvider"; // Assuming you have an AuthContext for authenticationa
+import { error } from "console";
 const LoginForm = () => {
   const navigate = useNavigate();
   const [isLoading, setIsLoading] = useState(false);
+
+  const auth = useAuth(); // Assuming you have a login function from your auth context or service
   const [formData, setFormData] = useState({
     email: "",
     password: "",
@@ -36,22 +39,14 @@ const LoginForm = () => {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsLoading(true);
+  console.log(formData.email)
 
     try {
-      // Mock login - in a real app, this would be an API call
-      await new Promise((resolve) => setTimeout(resolve, 1000));
-      
-      toast.success("Successfully logged in", {
-        description: "Welcome back to LUXE",
-      });
-      
-      navigate("/");
-    } catch (error) {
-      toast.error("Login failed", {
-        description: "Please check your credentials and try again",
-      });
-    } finally {
-      setIsLoading(false);
+
+        await auth?.login(formData.email,formData.password);
+        navigate("/");
+    }catch(error){
+        console.log (error)
     }
   };
 

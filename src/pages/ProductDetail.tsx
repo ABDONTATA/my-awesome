@@ -12,7 +12,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { toast } from "@/components/ui/sonner";
 import { Heart, Share, ShoppingBag, Star } from "lucide-react";
 
-// Mock product data
+
 const mockProducts = [
   {
     id: 1,
@@ -45,7 +45,7 @@ const ProductDetail = () => {
   const [selectedImage, setSelectedImage] = useState(0);
   const [quantity, setQuantity] = useState(1);
   
-  // Find product by ID
+ 
   const product = mockProducts.find(p => p.id === Number(id)) || mockProducts[0];
 
   const handleAddToCart = () => {
@@ -65,12 +65,12 @@ const ProductDetail = () => {
       <Navbar />
       <main className="flex-grow pt-24 pb-16">
         <div className="container px-4 mx-auto">
-          {/* Breadcrumb - optional */}
+          {}
           <div className="text-sm text-luxury-gray mb-6">
             Home / Products / {product.category} / {product.name}
           </div>
           
-          {/* Product display */}
+          {}
           <div className="grid grid-cols-1 md:grid-cols-2 gap-8 lg:gap-16">
             {/* Product images */}
             <motion.div 
@@ -106,7 +106,7 @@ const ProductDetail = () => {
               </div>
             </motion.div>
             
-            {/* Product info */}
+            {}
             <motion.div
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
@@ -191,7 +191,7 @@ const ProductDetail = () => {
                 </Button>
               </div>
               
-              {/* Product details tabs */}
+              {}
               <Tabs defaultValue="details">
                 <TabsList className="w-full justify-start mb-4">
                   <TabsTrigger value="details">Details</TabsTrigger>

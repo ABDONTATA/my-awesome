@@ -8,10 +8,12 @@ import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle }
 import { Checkbox } from "@/components/ui/checkbox";
 import { Mail, Lock, User } from "lucide-react";
 import { toast } from "@/components/ui/sonner";
+import { useAuth } from "@/Contexts/AuthProvider";
 
 const RegisterForm = () => {
   const navigate = useNavigate();
   const [isLoading, setIsLoading] = useState(false);
+  const {register} = useAuth();
   const [formData, setFormData] = useState({
     name: "",
     email: "",
@@ -56,8 +58,8 @@ const RegisterForm = () => {
     setIsLoading(true);
 
     try {
-      // Mock registration - in a real app, this would be an API call
-      await new Promise((resolve) => setTimeout(resolve, 1000));
+      
+      await register(formData.name, formData.email, formData.password);
       
       toast.success("Registration successful", {
         description: "Welcome to LUXE",

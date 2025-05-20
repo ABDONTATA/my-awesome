@@ -35,7 +35,7 @@ export function HeroSection() {
             )}
             style={{ animationDelay: "200ms" }}
           >
-            Discover True <span className="text-luxury-gold">Luxury</span>
+            Discover our <span className="text-luxury-gold">bts shope</span>
           </h1>
           
           <p 
@@ -55,7 +55,7 @@ export function HeroSection() {
             )}
             style={{ animationDelay: "600ms" }}
           >
-            <Button className="btn-luxury w-full sm:w-auto text-lg">Explore Collection</Button>
+            <Button className="btn-luxury w-full sm:w-auto text-lg">Ceck Collection</Button>
             <Button variant="outline" className="border-luxury-gold text-luxury-gold hover:bg-luxury-gold/10 w-full sm:w-auto text-lg">
               Learn More
             </Button>
