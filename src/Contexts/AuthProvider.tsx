@@ -1,21 +1,23 @@
 import React, { useEffect, useState, useContext } from 'react';
 
-const baseUrl = 'http://192.168.1.20:8080';
-interface User {
-  username: string;
-  email: string;
-  password: string;
-  profile: string;
+const baseUrl = 'http://localhost:8080';
+
+type UserType = {
+  username:string;
+  email:string;
+  profilePicture:string;
+  userRole:string;
 }
 
 interface AuthContextType {
   isAuthenticated: boolean;
+  setIsAuthenticated : (isAuthenticated : boolean) => void;
   login: (email: string, password: string) => Promise<void>;
   register: (name: string, email: string, password: string) => Promise<void>;
   logout: () => Promise<void>;
   accessToken: string | null;
-  getUserData : () => Promise<User>;
-
+  setAccessToken : (token : string | null) => void;
+  user : UserType | null;
 }
 
 const AuthContext = React.createContext<AuthContextType | null>(null);
@@ -27,6 +29,8 @@ interface AuthProviderProps {
 export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [accessToken, setAccessToken] = useState<string | null>(null);
+  const [user, setUser] = useState<UserType | null>(null);
+  
 
   const login = async (email: string, password: string) => {
     try {
@@ -54,7 +58,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
     }
   };
 
-  const register = async (name: string, email: string, password: string) => {
+  const register = async (name: string, email: string, password : string) => {
     try {
       const response = await fetch(`${baseUrl}/auth/registration`, {
         method: 'POST',
@@ -106,15 +110,16 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
     } finally {
       setAccessToken(null);
       setIsAuthenticated(false);
+      setUser(null);
     }
   };
 
   useEffect(() => {
-    
+    if(isAuthenticated){
     refreshAccessToken().catch(() => {
       setIsAuthenticated(false);
     });
-
+  }
    const interval = setInterval(() => {
       if (isAuthenticated) {
         refreshAccessToken().catch(() => {
@@ -126,32 +131,43 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
     return () => clearInterval(interval);
   }, [isAuthenticated]);
 
-const getUserData = async () => {
-  try {
-    const response = await fetch(`${baseUrl}/auth/user`, {
-      method: 'GET',
-      headers: { 'Content-Type': 'application/json' },
-      credentials: 'include',
-    });
 
-    if (response.ok) {
-      const data = await response.json();
-      console.log('User data:', data);
-      return data;
-    } else {
-      console.warn('Failed to fetch user data with status:', response.status);
-      throw new Error('Failed to fetch user data');
-    }
-  } catch (error) {
-    console.error('Fetch user data error:', error);
-    throw error;
-  } 
-  }
+  const fetchUser = async () => {
+    if (!accessToken) return;
+    try {
+      const res = await fetch(`${baseUrl}/api/user`, {
+        headers: {
+          Authorization: `Bearer ${accessToken}`,
+        },
+        credentials: "include",
+      });
+
+      if (!res.ok) throw new Error("Failed to fetch user");
+      const data =  await res.json();
+      return data.userData; 
+    } catch (err) {
+      console.error("User fetch error:", err);
+      throw err;
+    } 
+  };
+
+ useEffect(() => {
+    const fetchUserData = async () => {
+      if (isAuthenticated && accessToken) {
+        const userData = await fetchUser();
+        setUser(userData);
+      } else {
+        setUser(null);
+      }
+    };
+    fetchUserData();
+  }, [isAuthenticated, accessToken]);
+
 
 
   return (
     <AuthContext.Provider
-      value={{ isAuthenticated, login, register, logout, accessToken, getUserData }}
+      value={{ isAuthenticated,setIsAuthenticated, login, register, logout, accessToken,setAccessToken, user}}
     >
       {children}
     </AuthContext.Provider>

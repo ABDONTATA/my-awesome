@@ -20,7 +20,7 @@ const mockProducts = [
   },
   {
     id: 2,
-    name: "Gold Ring",
+    name: "Golden Ring",
     price: 999,
     category: "Jewelry",
     image: "https://images.unsplash.com/photo-1579113800380-284f4f739ec4?auto=format&fit=crop&w=800&q=80",

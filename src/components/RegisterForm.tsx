@@ -40,7 +40,6 @@ const RegisterForm = () => {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     
-    // Basic validation
     if (formData.password !== formData.confirmPassword) {
       toast.error("Passwords don't match", {
         description: "Please make sure your passwords match",

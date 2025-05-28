@@ -1,8 +1,7 @@
-
 import { useEffect } from "react";
 import { Navbar } from "@/components/Navbar";
 import { HeroSection } from "@/components/HeroSection";
-import { FeaturedProductsSection } from "@/components/FeaturedProductsSection";
+import { FeaturedProductsSection } from "@/pages/ProductsFolder/FeaturedProductsSection";
 import { BenefitsSection } from "@/components/BenefitsSection";
 import { Footer } from "@/components/Footer";
 import { ScrollToTop } from "@/components/ScrollToTop";
@@ -10,7 +9,6 @@ import { toast } from "@/components/ui/sonner";
 
 const Index = () => {
   useEffect(() => {
-   
     setTimeout(() => {
       toast("Welcome to LUXE", {
         description: "Discover our exclusive collection of luxury products.",

@@ -8,7 +8,7 @@ interface ProductCardProps {
   product: {
     id: number;
     name: string;
-    image: string;
+    imageURL: string;
     price: number;
     category: string;
     isNew?: boolean;
@@ -30,7 +30,7 @@ export function ProductCard({ product }: ProductCardProps) {
       {/* Image Container with Overlay */}
       <div className="relative aspect-square overflow-hidden">
         <img 
-          src={product.image} 
+          src={product.imageURL} 
           alt={product.name}
           className={cn(
             "w-full h-full object-cover transition-transform duration-700",

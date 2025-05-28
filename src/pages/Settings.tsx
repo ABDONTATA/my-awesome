@@ -1,15 +1,14 @@
-
 import { useState } from "react";
 import { motion } from "framer-motion";
 import { Navbar } from "@/components/Navbar";
 import { Footer } from "@/components/Footer";
 import { ScrollToTop } from "@/components/ScrollToTop";
-import { 
-  Card, 
-  CardContent, 
-  CardDescription, 
-  CardHeader, 
-  CardTitle 
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
 } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -18,14 +17,14 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Switch } from "@/components/ui/switch";
 import { Badge } from "@/components/ui/badge";
 import { toast } from "@/components/ui/sonner";
-import { useTheme } from "@/components/ThemeProvider";
-import { 
-  UserRound, 
-  Mail, 
-  Lock, 
-  Bell, 
-  CreditCard, 
-  Settings as SettingsIcon 
+import { useTheme } from "@/Contexts/ThemeProvider";
+import {
+  UserRound,
+  Mail,
+  Lock,
+  Bell,
+  CreditCard,
+  Settings as SettingsIcon,
 } from "lucide-react";
 
 const Settings = () => {
@@ -35,7 +34,7 @@ const Settings = () => {
     email: "alex.smith@example.com",
     phone: "+1 (555) 123-4567",
   });
-  
+
   const [notifications, setNotifications] = useState({
     emailNotifications: true,
     smsNotifications: false,
@@ -78,24 +77,36 @@ const Settings = () => {
 
             <Tabs defaultValue="profile" className="w-full">
               <TabsList className="grid grid-cols-4 mb-8">
-                <TabsTrigger value="profile" className="flex items-center justify-center gap-2">
+                <TabsTrigger
+                  value="profile"
+                  className="flex items-center justify-center gap-2"
+                >
                   <UserRound className="h-4 w-4" />
                   <span className="hidden sm:inline">Profile</span>
                 </TabsTrigger>
-                <TabsTrigger value="password" className="flex items-center justify-center gap-2">
+                <TabsTrigger
+                  value="password"
+                  className="flex items-center justify-center gap-2"
+                >
                   <Lock className="h-4 w-4" />
                   <span className="hidden sm:inline">Password</span>
                 </TabsTrigger>
-                <TabsTrigger value="notifications" className="flex items-center justify-center gap-2">
+                <TabsTrigger
+                  value="notifications"
+                  className="flex items-center justify-center gap-2"
+                >
                   <Bell className="h-4 w-4" />
                   <span className="hidden sm:inline">Notifications</span>
                 </TabsTrigger>
-                <TabsTrigger value="payment" className="flex items-center justify-center gap-2">
+                <TabsTrigger
+                  value="payment"
+                  className="flex items-center justify-center gap-2"
+                >
                   <CreditCard className="h-4 w-4" />
                   <span className="hidden sm:inline">Payment</span>
                 </TabsTrigger>
               </TabsList>
-              
+
               {/* Profile Tab */}
               <TabsContent value="profile">
                 <Card>
@@ -110,37 +121,54 @@ const Settings = () => {
                       <div className="space-y-4">
                         <div className="space-y-2">
                           <Label htmlFor="name">Full Name</Label>
-                          <Input 
-                            id="name" 
+                          <Input
+                            id="name"
                             value={profileData.name}
-                            onChange={(e) => setProfileData({...profileData, name: e.target.value})}
+                            onChange={(e) =>
+                              setProfileData({
+                                ...profileData,
+                                name: e.target.value,
+                              })
+                            }
                           />
                         </div>
                         <div className="space-y-2">
                           <Label htmlFor="email">Email</Label>
-                          <Input 
-                            id="email" 
+                          <Input
+                            id="email"
                             type="email"
                             value={profileData.email}
-                            onChange={(e) => setProfileData({...profileData, email: e.target.value})}
+                            onChange={(e) =>
+                              setProfileData({
+                                ...profileData,
+                                email: e.target.value,
+                              })
+                            }
                           />
                         </div>
                         <div className="space-y-2">
                           <Label htmlFor="phone">Phone</Label>
-                          <Input 
-                            id="phone" 
+                          <Input
+                            id="phone"
                             type="tel"
                             value={profileData.phone}
-                            onChange={(e) => setProfileData({...profileData, phone: e.target.value})}
+                            onChange={(e) =>
+                              setProfileData({
+                                ...profileData,
+                                phone: e.target.value,
+                              })
+                            }
                           />
                         </div>
                       </div>
-                      <Button type="submit" className="btn-luxury">Save Changes</Button>
+                      <Button type="submit" className="btn-luxury">
+                        Save Changes
+                      </Button>
                     </form>
                   </CardContent>
                 </Card>
               </TabsContent>
-              
+
               {/* Password Tab */}
               <TabsContent value="password">
                 <Card>
@@ -154,7 +182,9 @@ const Settings = () => {
                     <form onSubmit={handlePasswordSave} className="space-y-6">
                       <div className="space-y-4">
                         <div className="space-y-2">
-                          <Label htmlFor="current-password">Current Password</Label>
+                          <Label htmlFor="current-password">
+                            Current Password
+                          </Label>
                           <Input id="current-password" type="password" />
                         </div>
                         <div className="space-y-2">
@@ -162,16 +192,20 @@ const Settings = () => {
                           <Input id="new-password" type="password" />
                         </div>
                         <div className="space-y-2">
-                          <Label htmlFor="confirm-password">Confirm New Password</Label>
+                          <Label htmlFor="confirm-password">
+                            Confirm New Password
+                          </Label>
                           <Input id="confirm-password" type="password" />
                         </div>
                       </div>
-                      <Button type="submit" className="btn-luxury">Update Password</Button>
+                      <Button type="submit" className="btn-luxury">
+                        Update Password
+                      </Button>
                     </form>
                   </CardContent>
                 </Card>
               </TabsContent>
-              
+
               {/* Notifications Tab */}
               <TabsContent value="notifications">
                 <Card>
@@ -182,58 +216,91 @@ const Settings = () => {
                     </CardDescription>
                   </CardHeader>
                   <CardContent>
-                    <form onSubmit={handleNotificationSave} className="space-y-6">
+                    <form
+                      onSubmit={handleNotificationSave}
+                      className="space-y-6"
+                    >
                       <div className="space-y-6">
                         <div className="flex items-center justify-between">
                           <div>
                             <h3 className="font-medium">Email Notifications</h3>
-                            <p className="text-sm text-muted-foreground">Receive notifications via email</p>
+                            <p className="text-sm text-muted-foreground">
+                              Receive notifications via email
+                            </p>
                           </div>
-                          <Switch 
+                          <Switch
                             checked={notifications.emailNotifications}
-                            onCheckedChange={(checked) => setNotifications({...notifications, emailNotifications: checked})}
+                            onCheckedChange={(checked) =>
+                              setNotifications({
+                                ...notifications,
+                                emailNotifications: checked,
+                              })
+                            }
                           />
                         </div>
-                        
+
                         <div className="flex items-center justify-between">
                           <div>
                             <h3 className="font-medium">SMS Notifications</h3>
-                            <p className="text-sm text-muted-foreground">Receive notifications via SMS</p>
+                            <p className="text-sm text-muted-foreground">
+                              Receive notifications via SMS
+                            </p>
                           </div>
-                          <Switch 
+                          <Switch
                             checked={notifications.smsNotifications}
-                            onCheckedChange={(checked) => setNotifications({...notifications, smsNotifications: checked})}
+                            onCheckedChange={(checked) =>
+                              setNotifications({
+                                ...notifications,
+                                smsNotifications: checked,
+                              })
+                            }
                           />
                         </div>
-                        
+
                         <div className="flex items-center justify-between">
                           <div>
                             <h3 className="font-medium">Promotional Emails</h3>
-                            <p className="text-sm text-muted-foreground">Receive emails about promotions and sales</p>
+                            <p className="text-sm text-muted-foreground">
+                              Receive emails about promotions and sales
+                            </p>
                           </div>
-                          <Switch 
+                          <Switch
                             checked={notifications.promotionalEmails}
-                            onCheckedChange={(checked) => setNotifications({...notifications, promotionalEmails: checked})}
+                            onCheckedChange={(checked) =>
+                              setNotifications({
+                                ...notifications,
+                                promotionalEmails: checked,
+                              })
+                            }
                           />
                         </div>
-                        
+
                         <div className="flex items-center justify-between">
                           <div>
                             <h3 className="font-medium">Weekly Newsletter</h3>
-                            <p className="text-sm text-muted-foreground">Receive our weekly newsletter</p>
+                            <p className="text-sm text-muted-foreground">
+                              Receive our weekly newsletter
+                            </p>
                           </div>
-                          <Switch 
+                          <Switch
                             checked={notifications.weeklyNewsletter}
-                            onCheckedChange={(checked) => setNotifications({...notifications, weeklyNewsletter: checked})}
+                            onCheckedChange={(checked) =>
+                              setNotifications({
+                                ...notifications,
+                                weeklyNewsletter: checked,
+                              })
+                            }
                           />
                         </div>
                       </div>
-                      <Button type="submit" className="btn-luxury">Save Preferences</Button>
+                      <Button type="submit" className="btn-luxury">
+                        Save Preferences
+                      </Button>
                     </form>
                   </CardContent>
                 </Card>
               </TabsContent>
-              
+
               {/* Payment Tab */}
               <TabsContent value="payment">
                 <Card>
@@ -252,43 +319,55 @@ const Settings = () => {
                           </div>
                           <div>
                             <p className="font-medium">Visa ending in 4242</p>
-                            <p className="text-sm text-muted-foreground">Expires 12/2025</p>
+                            <p className="text-sm text-muted-foreground">
+                              Expires 12/2025
+                            </p>
                           </div>
                         </div>
                         <div>
                           <Badge className="bg-green-500">Default</Badge>
                         </div>
                       </div>
-                      
+
                       <div className="rounded-lg border p-4 flex items-center justify-between">
                         <div className="flex items-center space-x-4">
                           <div className="bg-luxury-black text-luxury-gold p-2 rounded">
                             <CreditCard className="h-6 w-6" />
                           </div>
                           <div>
-                            <p className="font-medium">Mastercard ending in 5678</p>
-                            <p className="text-sm text-muted-foreground">Expires 08/2024</p>
+                            <p className="font-medium">
+                              Mastercard ending in 5678
+                            </p>
+                            <p className="text-sm text-muted-foreground">
+                              Expires 08/2024
+                            </p>
                           </div>
                         </div>
                         <div>
-                          <Button variant="outline" size="sm">Set as default</Button>
+                          <Button variant="outline" size="sm">
+                            Set as default
+                          </Button>
                         </div>
                       </div>
-                      
+
                       <Button className="btn-luxury w-full">
                         Add Payment Method
                       </Button>
-                      
+
                       <div className="mt-8">
                         <h3 className="text-lg font-medium mb-4">Appearance</h3>
                         <div className="flex items-center justify-between">
                           <div>
                             <h4 className="font-medium">Dark Mode</h4>
-                            <p className="text-sm text-muted-foreground">Toggle between light and dark mode</p>
+                            <p className="text-sm text-muted-foreground">
+                              Toggle between light and dark mode
+                            </p>
                           </div>
-                          <Switch 
+                          <Switch
                             checked={theme === "dark"}
-                            onCheckedChange={(checked) => setTheme(checked ? "dark" : "light")}
+                            onCheckedChange={(checked) =>
+                              setTheme(checked ? "dark" : "light")
+                            }
                           />
                         </div>
                       </div>
