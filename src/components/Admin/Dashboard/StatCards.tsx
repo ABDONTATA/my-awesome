@@ -1,66 +1,19 @@
-import { TrendingUp, TrendingDown } from "lucide-react";
-
 export const StatCards = () => {
-  return (
-    <>
-      <Card
-        title="Gross Revenue"
-        value="$120,054.24"
-        pillText="2.75%"
-        trend="up"
-        period="From Jan 1st - Jul 31st"
-      />
-      <Card
-        title="Avg Order"
-        value="$27.97"
-        pillText="1.01%"
-        trend="down"
-        period="From Jan 1st - Jul 31st"
-      />
-      <Card
-        title="Trailing Year"
-        value="$278,054.24"
-        pillText="60.75%"
-        trend="up"
-        period="Previous 365 days"
-      />
-    </>
-  );
-};
+  const stats = [
+    { title: 'totale des ', value: '$12,345', change: '+12%' },
+    { title: 'les nouveux commandes', value: '54', change: '+7%' },
+    { title: 'les utlisateurs actives', value: '892', change: '+3%' },
+  ];
 
-const Card = ({
-  title,
-  value,
-  pillText,
-  trend,
-  period,
-}: {
-  title: string;
-  value: string;
-  pillText: string;
-  trend: "up" | "down";
-  period: string;
-}) => {
   return (
-    <div className="col-span-4 p-4 rounded border border-stone-300">
-      <div className="flex mb-8 items-start justify-between">
-        <div>
-          <h3 className="text-stone-500 mb-2 text-sm">{title}</h3>
-          <p className="text-3xl font-semibold">{value}</p>
+    <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+      {stats.map((stat, index) => (
+        <div key={index} className="bg-card rounded-lg border p-4">
+          <h3 className="text-sm text-muted-foreground">{stat.title}</h3>
+          <p className="text-2xl font-bold">{stat.value}</p>
+          <p className="text-sm text-success">{stat.change}</p>
         </div>
-
-        <span
-          className={`text-xs flex items-center gap-1 font-medium px-2 py-1 rounded ${
-            trend === "up"
-              ? "bg-green-100 text-green-700"
-              : "bg-red-100 text-red-700"
-          }`}
-        >
-          {trend === "up" ? <TrendingUp /> : <TrendingDown />} {pillText}
-        </span>
-      </div>
-
-      <p className="text-xs text-stone-500">{period}</p>
+      ))}
     </div>
   );
 };
