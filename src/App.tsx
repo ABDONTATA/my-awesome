@@ -4,7 +4,7 @@ import UserApp from "./UserApp";
 
 
 const App = () => {
-  const { user } = useAuth();
+  const { user } = useAuth()!;
   if (user?.userRole === "ADMIN") return <AdminApp />;
   return <UserApp />;
 };

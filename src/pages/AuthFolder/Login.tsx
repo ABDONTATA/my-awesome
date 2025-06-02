@@ -1,9 +1,8 @@
-
 import { motion } from "framer-motion";
 import { AspectRatio } from "@/components/ui/aspect-ratio";
 import LoginForm from "@/pages/AuthFolder/LoginForm";
 import { Navbar } from "@/components/Navbar";
-import { Footer } from "@/components/Footer";
+import { Footer } from "@/components/Admin/Footer";
 import { ScrollToTop } from "@/components/ScrollToTop";
 
 const Login = () => {
@@ -15,14 +14,13 @@ const Login = () => {
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-16 items-center">
             <motion.div
               initial={{ opacity: 0, y: 20 }}
-              
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.5 }}
               className="flex flex-col items-center justify-center"
             >
               <LoginForm />
             </motion.div>
-            
+
             <motion.div
               initial={{ opacity: 0, x: 30 }}
               animate={{ opacity: 1, x: 0 }}
@@ -30,10 +28,10 @@ const Login = () => {
               className="hidden lg:block"
             >
               <div className="overflow-hidden rounded-lg">
-                <AspectRatio ratio={1/1}>
-                  <img 
-                    src="https://images.unsplash.com/photo-1490481651871-ab68de25d43d?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1400&q=80" 
-                    alt="Luxury fashion" 
+                <AspectRatio ratio={1 / 1}>
+                  <img
+                    src="https://images.unsplash.com/photo-1490481651871-ab68de25d43d?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1400&q=80"
+                    alt="Luxury fashion"
                     className="w-full h-full object-cover hover:scale-105 transition-transform duration-500"
                   />
                 </AspectRatio>

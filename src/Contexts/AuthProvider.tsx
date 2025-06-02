@@ -115,11 +115,10 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
   };
 
   useEffect(() => {
-    if(isAuthenticated){
     refreshAccessToken().catch(() => {
       setIsAuthenticated(false);
     });
-  }
+  
    const interval = setInterval(() => {
       if (isAuthenticated) {
         refreshAccessToken().catch(() => {

@@ -14,6 +14,7 @@ import PaymentSuccess from "./pages/PaymentFolder/PaymentSuccess";
 import NotFound from "./pages/NotFound";
 import { Profile } from "./pages/Profile";
 import { OAuth2Callback } from "./Contexts/OAuth2Callback";
+import Cart from "./pages/Cart";
 
 
 const UserApp = () => (
@@ -30,8 +31,10 @@ const UserApp = () => (
                 <Route path="/payment" element={<Payment />} />
                 <Route path="/auth/callback" element={<OAuth2Callback />} />
                 <Route path="/payment-success" element={<PaymentSuccess />} />
+                <Route path="/cart" element={<Cart />} />
                 <Route path="*" element={<NotFound />} />
               </Routes>
 );
 
 export default UserApp;
+

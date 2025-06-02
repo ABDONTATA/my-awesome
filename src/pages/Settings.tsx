@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { motion } from "framer-motion";
 import { Navbar } from "@/components/Navbar";
-import { Footer } from "@/components/Footer";
+import { Footer } from "@/components/Admin/Footer";
 import { ScrollToTop } from "@/components/ScrollToTop";
 import {
   Card,
