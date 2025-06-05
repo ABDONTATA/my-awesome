@@ -55,7 +55,7 @@ export function FeaturedProductsSection() {
   
         const addProducts = async () => {
         const products = await getProductsList();
-        setFeaturedProducts(products.products);
+        setFeaturedProducts(products);
       };
       addProducts();
     

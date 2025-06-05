@@ -34,6 +34,7 @@ const Product = () => {
   const [products, setProducts] = useState([]);
 
   useEffect(() => {
+    console.log("this is it");
     setProducts(mockProducts);
   }, []);
 

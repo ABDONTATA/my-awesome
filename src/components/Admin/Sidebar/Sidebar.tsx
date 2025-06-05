@@ -1,33 +1,18 @@
-// src/components/Admin/Sidebar/Sidebar.tsx
-import { SetStateAction } from 'react';
-import { AccountToggle } from './AccountToggle';
-import { CommandMenu } from './CommandMenu';
-import { Plan } from './Plan';
-import { RouteSelect } from './RouteSelect';
-import { Search } from './Search';
+import { AccountToggle } from "./AccountToggle";
+import { SearchBar } from "./Search";
+import { RouteSelect } from "./RouteSelect";
+import { Plan } from "./Plan";
 
 export const Sidebar = () => {
   return (
-    <aside className="w-64 border-r bg-background p-4 flex flex-col h-full">
-      <div className="mb-6">
+    <div>
+      <div className="overflow-y-scroll sticky top-4 h-[calc(100vh-32px-48px)]">
+        <AccountToggle />
+        <SearchBar />
         <RouteSelect />
       </div>
-      
-      <div className="mb-4">
-        <Search />
-      </div>
-      
-      <nav className="flex-1">
-        {}
-      </nav>
-      
-      <div className="space-y-4">
-        <CommandMenu open={false} setOpen={function (value: SetStateAction<boolean>): void {
-          throw new Error('Function not implemented.');
-        } } />
-        <Plan />
-        <AccountToggle />
-      </div>
-    </aside>
+
+      <Plan />
+    </div>
   );
 };

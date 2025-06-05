@@ -1,16 +1,21 @@
-
 import { motion } from "framer-motion";
 import { Link } from "react-router-dom";
 import { Navbar } from "@/components/Navbar";
 import { Footer } from "@/components/Footer";
 import { ScrollToTop } from "@/components/ScrollToTop";
 import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
+import {
+  Card,
+  CardContent,
+  CardFooter,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
 import { CheckCircle, Package, ShoppingBag } from "lucide-react";
 
 const PaymentSuccess = () => {
   const orderId = "LUXE-" + Math.floor(10000000 + Math.random() * 90000000);
-  
+
   return (
     <div className="min-h-screen flex flex-col">
       <Navbar />
@@ -25,9 +30,12 @@ const PaymentSuccess = () => {
             <div className="inline-flex items-center justify-center rounded-full bg-green-100 p-4 mb-4">
               <CheckCircle className="h-12 w-12 text-green-600" />
             </div>
-            <h1 className="text-3xl md:text-4xl font-bold">Payment Successful!</h1>
+            <h1 className="text-3xl md:text-4xl font-bold">
+              Payment Successful!
+            </h1>
             <p className="text-lg text-muted-foreground mt-2">
-              Thank you for your purchase. Your order has been placed successfully.
+              Thank you for your purchase. Your order has been placed
+              successfully.
             </p>
           </motion.div>
 
@@ -46,27 +54,39 @@ const PaymentSuccess = () => {
               <CardContent className="p-6">
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   <div>
-                    <h3 className="font-semibold text-sm text-muted-foreground mb-1">Order Number</h3>
+                    <h3 className="font-semibold text-sm text-muted-foreground mb-1">
+                      Order Number
+                    </h3>
                     <p className="font-mono">{orderId}</p>
                   </div>
                   <div>
-                    <h3 className="font-semibold text-sm text-muted-foreground mb-1">Date</h3>
+                    <h3 className="font-semibold text-sm text-muted-foreground mb-1">
+                      Date
+                    </h3>
                     <p>{new Date().toLocaleDateString()}</p>
                   </div>
                   <div>
-                    <h3 className="font-semibold text-sm text-muted-foreground mb-1">Email</h3>
+                    <h3 className="font-semibold text-sm text-muted-foreground mb-1">
+                      Email
+                    </h3>
                     <p>customer@example.com</p>
                   </div>
                   <div>
-                    <h3 className="font-semibold text-sm text-muted-foreground mb-1">Total</h3>
+                    <h3 className="font-semibold text-sm text-muted-foreground mb-1">
+                      Total
+                    </h3>
                     <p>$4,898.00</p>
                   </div>
                   <div>
-                    <h3 className="font-semibold text-sm text-muted-foreground mb-1">Payment Method</h3>
+                    <h3 className="font-semibold text-sm text-muted-foreground mb-1">
+                      Payment Method
+                    </h3>
                     <p>Credit Card (•••• 4242)</p>
                   </div>
                   <div>
-                    <h3 className="font-semibold text-sm text-muted-foreground mb-1">Shipping</h3>
+                    <h3 className="font-semibold text-sm text-muted-foreground mb-1">
+                      Shipping
+                    </h3>
                     <p>Express (1-2 business days)</p>
                   </div>
                 </div>
@@ -97,7 +117,10 @@ const PaymentSuccess = () => {
               </CardContent>
               <CardFooter className="flex flex-col space-y-2 bg-secondary/30 p-6">
                 <div className="text-sm text-center w-full">
-                  <p>A confirmation email has been sent to <span className="font-semibold">customer@example.com</span></p>
+                  <p>
+                    A confirmation email has been sent to{" "}
+                    <span className="font-semibold">customer@example.com</span>
+                  </p>
                 </div>
               </CardFooter>
             </Card>
@@ -110,14 +133,10 @@ const PaymentSuccess = () => {
             className="flex flex-col md:flex-row gap-4 justify-center"
           >
             <Button asChild className="btn-luxury">
-              <Link to="/">
-                Continue Shopping
-              </Link>
+              <Link to="/">Continue Shopping</Link>
             </Button>
             <Button asChild variant="outline">
-              <Link to="/settings">
-                View Order History
-              </Link>
+              <Link to="/settings">View Order History</Link>
             </Button>
           </motion.div>
         </div>

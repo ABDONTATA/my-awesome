@@ -36,27 +36,27 @@ const handleOverlayClick = (e: React.MouseEvent<HTMLDivElement>) => {
       </div>
 
       <div className="p-4 space-y-4 text-sm">
-        <Link to="/profile" onClick={onClose} className="flex items-center space-x-2 hover:text-yellow-400">
+        <Link to="/profile" onClick={onClose} className="flex items-center space-x-2 luxury-gold">
           <User className="w-5 h-5" />
           <span>Profile</span>
         </Link>
 
-        <Link to="/notifications" onClick={onClose} className="flex items-center space-x-2 hover:text-yellow-400">
+        <Link to="/notifications" onClick={onClose} className="flex items-center space-x-2 hover:luxury-gold">
           <Bell className="w-5 h-5" />
           <span>Notifications</span>
         </Link>
 
-        <Link to="/settings" onClick={onClose} className="flex items-center space-x-2 hover:text-yellow-400">
+        <Link to="/settings" onClick={onClose} className="flex items-center space-x-2 hover:luxury-gold">
           <Settings className="w-5 h-5" />
           <span>Settings</span>
         </Link>
 
-        <div className="flex items-center space-x-2 cursor-pointer hover:text-yellow-400">
+        <div className="flex items-center space-x-2 cursor-pointer hover:luxury-gold">
           <Globe className="w-5 h-5" />
           <span>Language: EN</span>
         </div>
 
-        <div className="flex items-center space-x-2 cursor-pointer hover:text-yellow-400">
+        <div className="flex items-center space-x-2 cursor-pointer hover:luxury-gold">
           <Globe className="w-5 h-5" />
           <span>Country: US</span>
         </div>

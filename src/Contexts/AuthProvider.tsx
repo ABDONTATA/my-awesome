@@ -1,6 +1,6 @@
 import React, { useEffect, useState, useContext } from 'react';
 
-const baseUrl = 'http://192.168.1.42:8080';
+const baseUrl = 'http://localhost:8080';
 
 type UserType = {
   username:string;
@@ -115,11 +115,10 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
   };
 
   useEffect(() => {
-    if(isAuthenticated){
     refreshAccessToken().catch(() => {
       setIsAuthenticated(false);
     });
-  }
+  
    const interval = setInterval(() => {
       if (isAuthenticated) {
         refreshAccessToken().catch(() => {

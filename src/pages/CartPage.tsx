@@ -1,9 +1,9 @@
 import React from "react";
 import { useCart } from "../Contexts/CartContext";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
 interface CartItem {
-  id: string;
+  id: number;
   name: string;
   price: number;
   quantity: number;
@@ -22,186 +22,69 @@ const CartPage: React.FC = () => {
 
   const total = items.reduce((sum, item) => sum + item.price * item.quantity, 0);
 
-  const handleMouseOver = (
-    e: React.MouseEvent<HTMLButtonElement>,
-    hoverColor: string,
-    textColor: string = "white"
-  ) => {
-    e.currentTarget.style.backgroundColor = hoverColor;
-    e.currentTarget.style.color = textColor;
-  };
-
-  const handleMouseOut = (
-    e: React.MouseEvent<HTMLButtonElement>,
-    defaultColor: string = "transparent",
-    textColor: string = "#e74c3c"
-  ) => {
-    e.currentTarget.style.backgroundColor = defaultColor;
-    e.currentTarget.style.color = textColor;
-  };
-
-  const renderCartItemImage = (item: CartItem) => {
-    return (
-      <div style={{
-        width: "80px",
-        height: "80px",
-        backgroundColor: "#f5f5f5",
-        borderRadius: "4px",
-        display: "flex",
-        alignItems: "center",
-        justifyContent: "center",
-        color: "#bdc3c7",
-        overflow: "hidden"
-      }}>
-        {item.image ? (
-          <img
-            src={item.image}
-            alt={item.name}
-            style={{
-              width: "100%",
-              height: "100%",
-              objectFit: "cover"
-            }}
-          />
-        ) : (
-          <span>No Image</span>
-        )}
-      </div>
-    );
-  };
+  const renderCartItemImage = (item: CartItem) => (
+    <div className="w-20 h-20 bg-gray-800 rounded flex items-center justify-center text-gray-400 overflow-hidden">
+      {item.image ? (
+        <img src={item.image} alt={item.name} className="w-full h-full object-cover" />
+      ) : (
+        <span className="text-sm text-gray-500">No Image</span>
+      )}
+    </div>
+  );
 
   return (
-    <div className="cart-page" style={{
-      maxWidth: "800px",
-      margin: "0 auto",
-      padding: "2rem",
-      fontFamily: "'Segoe UI', Tahoma, Geneva, Verdana, sans-serif",
-      minHeight: "calc(100vh - 4rem)"
-    }}>
-      <h1 style={{
-        fontSize: "2.5rem",
-        color: "#2c3e50",
-        marginBottom: "2rem",
-        borderBottom: "2px solid #f1f1f1",
-        paddingBottom: "1rem"
-      }}>
-        Your Shopping Cart
+    <div className="max-w-5xl mx-auto py-10 px-4 text-gray-200 font-sans bg-gray-900 min-h-[calc(100vh-4rem)]">
+      <h1 className="text-3xl font-semibold mb-8 border-b border-gray-700 pb-4">
+        🛒 Your Shopping Cart
       </h1>
 
       {items.length === 0 ? (
-        <div style={{
-          textAlign: "center",
-          padding: "3rem",
-          backgroundColor: "#f9f9f9",
-          borderRadius: "8px",
-          marginTop: "2rem"
-        }}>
-          <p style={{ fontSize: "1.2rem", color: "#7f8c8d" }}>Your cart is empty</p>
+        <div className="text-center py-16 bg-gray-800 rounded-lg mt-6 shadow-inner">
+          <p className="text-lg text-gray-400">Your cart is empty</p>
           <button
             onClick={() => navigate("/")}
-            style={{
-              marginTop: "1rem",
-              backgroundColor: "#3498db",
-              color: "white",
-              border: "none",
-              padding: "0.8rem 1.5rem",
-              borderRadius: "4px",
-              cursor: "pointer",
-              fontSize: "1rem",
-              transition: "background-color 0.3s"
-            }}
-            onMouseOver={(e) => handleMouseOver(e, "#2980b9")}
-            onMouseOut={(e) => handleMouseOut(e, "#3498db", "white")}
+            className="mt-6 bg-blue-600 text-white px-6 py-2 rounded-md hover:bg-blue-700 transition"
           >
             Continue Shopping
           </button>
         </div>
       ) : (
         <>
-          <div className="cart-items" style={{
-            marginBottom: "2rem",
-            boxShadow: "0 2px 10px rgba(0,0,0,0.05)",
-            borderRadius: "8px",
-            overflow: "hidden"
-          }}>
+          <div className="mb-10 rounded-lg overflow-hidden divide-y divide-gray-700 shadow-md bg-gray-800">
             {items.map((item) => (
               <div
                 key={item.id}
-                className="cart-item"
-                style={{
-                  backgroundColor: "white",
-                  padding: "1.5rem",
-                  display: "flex",
-                  justifyContent: "space-between",
-                  alignItems: "center",
-                  borderBottom: "1px solid #f1f1f1"
-                }}
+                className="px-6 py-5 flex justify-between items-center"
               >
-                <div style={{ display: "flex", alignItems: "center", gap: "1.5rem" }}>
+                <div className="flex items-center gap-6">
                   {renderCartItemImage(item)}
                   <div>
-                    <h3 style={{
-                      margin: "0 0 0.5rem 0",
-                      color: "#2c3e50",
-                      fontSize: "1.2rem"
-                    }}>
-                      {item.name}
-                    </h3>
-                    <p style={{
-                      margin: "0",
-                      color: "#7f8c8d",
-                      fontSize: "1rem"
-                    }}>
-                      ${item.price.toFixed(2)}
-                    </p>
-                    <div style={{ marginTop: "0.5rem", display: "flex", alignItems: "center", gap: "0.5rem" }}>
+                    <h3 className="text-lg font-medium text-white">{item.name}</h3>
+                    <p className="text-gray-400 text-sm">${item.price.toFixed(2)}</p>
+                    <div className="mt-2 flex items-center gap-2">
                       <button
                         onClick={() => decreaseQuantity(item.id)}
                         disabled={item.quantity === 1}
-                        style={{
-                          padding: "0.3rem 0.7rem",
-                          border: "1px solid #ccc",
-                          backgroundColor: "#eee",
-                          cursor: "pointer",
-                          borderRadius: "4px"
-                        }}
-                      >−</button>
-                      <span>{item.quantity}</span>
+                        className="px-2 py-1 border border-gray-600 text-gray-300 rounded hover:bg-gray-700 disabled:opacity-40"
+                      >
+                        −
+                      </button>
+                      <span className="px-2">{item.quantity}</span>
                       <button
                         onClick={() => increaseQuantity(item.id)}
-                        style={{
-                          padding: "0.3rem 0.7rem",
-                          border: "1px solid #ccc",
-                          backgroundColor: "#eee",
-                          cursor: "pointer",
-                          borderRadius: "4px"
-                        }}
-                      >+</button>
+                        className="px-2 py-1 border border-gray-600 text-gray-300 rounded hover:bg-gray-700"
+                      >
+                        +
+                      </button>
                     </div>
-                    <p style={{
-                      marginTop: "0.5rem",
-                      color: "#2c3e50",
-                      fontWeight: "500",
-                      fontSize: "1.1rem"
-                    }}>
+                    <p className="mt-2 text-white font-semibold">
                       ${(item.price * item.quantity).toFixed(2)}
                     </p>
                   </div>
                 </div>
                 <button
                   onClick={() => removeFromCart(item.id)}
-                  style={{
-                    backgroundColor: "transparent",
-                    color: "#e74c3c",
-                    border: "1px solid #e74c3c",
-                    padding: "0.5rem 1rem",
-                    borderRadius: "4px",
-                    cursor: "pointer",
-                    fontSize: "0.9rem",
-                    transition: "all 0.3s"
-                  }}
-                  onMouseOver={(e) => handleMouseOver(e, "#e74c3c")}
-                  onMouseOut={(e) => handleMouseOut(e)}
+                  className="text-red-400 border border-red-500 px-4 py-2 rounded-md hover:bg-red-600 hover:text-white transition"
                 >
                   Remove
                 </button>
@@ -209,78 +92,24 @@ const CartPage: React.FC = () => {
             ))}
           </div>
 
-          <div className="cart-summary" style={{
-            backgroundColor: "white",
-            padding: "1.5rem",
-            borderRadius: "8px",
-            boxShadow: "0 2px 10px rgba(0,0,0,0.05)",
-            position: "sticky",
-            bottom: "1rem"
-          }}>
-            <div style={{
-              display: "flex",
-              justifyContent: "space-between",
-              alignItems: "center",
-              marginBottom: "1.5rem"
-            }}>
-              <h3 style={{
-                margin: "0",
-                fontSize: "1.3rem",
-                color: "#2c3e50"
-              }}>
-                Order Summary
-              </h3>
-              <h3 style={{
-                margin: "0",
-                fontSize: "1.5rem",
-                color: "#2c3e50"
-              }}>
-                ${total.toFixed(2)}
-              </h3>
+          <div className="bg-gray-800 p-6 rounded-lg shadow-md">
+            <div className="flex justify-between items-center mb-6">
+              <h3 className="text-lg text-white font-semibold">Order Summary</h3>
+              <h3 className="text-xl text-white font-bold">${total.toFixed(2)}</h3>
             </div>
-
-            <div style={{
-              display: "flex",
-              gap: "1rem",
-              justifyContent: "flex-end",
-              flexWrap: "wrap"
-            }}>
+            <div className="flex justify-end gap-4">
               <button
                 onClick={clearCart}
-                style={{
-                  backgroundColor: "transparent",
-                  color: "#e74c3c",
-                  border: "1px solid #e74c3c",
-                  padding: "0.8rem 1.5rem",
-                  borderRadius: "4px",
-                  cursor: "pointer",
-                  fontSize: "1rem",
-                  transition: "all 0.3s",
-                  minWidth: "120px"
-                }}
-                onMouseOver={(e) => handleMouseOver(e, "#e74c3c")}
-                onMouseOut={(e) => handleMouseOut(e)}
+                className="text-red-400 border border-red-500 px-5 py-2 rounded-md hover:bg-red-600 hover:text-white transition"
               >
                 Clear Cart
               </button>
-              <button
-                onClick={() => alert("Proceeding to checkout...")}
-                style={{
-                  backgroundColor: "#2ecc71",
-                  color: "white",
-                  border: "none",
-                  padding: "0.8rem 1.5rem",
-                  borderRadius: "4px",
-                  cursor: "pointer",
-                  fontSize: "1rem",
-                  transition: "background-color 0.3s",
-                  minWidth: "180px"
-                }}
-                onMouseOver={(e) => handleMouseOver(e, "#27ae60")}
-                onMouseOut={(e) => handleMouseOut(e, "#2ecc71", "white")}
+              <Link
+                to="/payment"
+                className="bg-green-600 text-white px-6 py-2 rounded-md hover:bg-green-700 transition"
               >
                 Proceed to Checkout
-              </button>
+              </Link>
             </div>
           </div>
         </>
