@@ -6,7 +6,7 @@ interface ProductsContextType {
   getProductsList: () => Promise<any>;
 }
 
-const baseUrl = "http://192.168.1.42:8080/api/products";
+const baseUrl = "http://localhost:8080/api/products";
 const ProductContext = React.createContext<ProductsContextType | null>(null);
 
 export const ProductsProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {

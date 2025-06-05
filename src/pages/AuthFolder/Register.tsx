@@ -2,7 +2,7 @@ import { motion } from "framer-motion";
 import { AspectRatio } from "@/components/ui/aspect-ratio";
 import RegisterForm from "@/components/RegisterForm";
 import { Navbar } from "@/components/Navbar";
-import { Footer } from "@/components/Admin/Footer";
+import { Footer } from "@/components/Footer";
 import { ScrollToTop } from "@/components/ScrollToTop";
 import { useAuth } from "@/Contexts/AuthProvider";
 

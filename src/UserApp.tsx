@@ -1,4 +1,4 @@
-import { Routes, Route } from "react-router-dom";
+import { Routes, Route, Navigate } from "react-router-dom";
 import Index from "./pages/Index";
 import Contact from "./pages/Contact";
 import Login from "./pages/AuthFolder/Login";
@@ -11,9 +11,11 @@ import PaymentSuccess from "./pages/PaymentFolder/PaymentSuccess";
 import NotFound from "./pages/NotFound";
 import { Profile } from "./pages/Profile";
 import { OAuth2Callback } from "./Contexts/OAuth2Callback";
-import Cart from "./pages/Cart";
-
-import CartPage from "./pages/CartPage";  
+import CartPage from "./pages/CartPage";
+import { EcommercePage } from "./components/Ecommerce/EcommercePage";
+import { EcommerceLayout } from "./components/Ecommerce/EcommerceLayout";
+import { Categories } from "./components/Ecommerce/Categories";
+import { Products } from "./components/Ecommerce/Products";
 const UserApp = () => (
   <Routes>
     <Route path="/" element={<Index />} />
@@ -27,10 +29,14 @@ const UserApp = () => (
     <Route path="/payment" element={<Payment />} />
     <Route path="/auth/callback" element={<OAuth2Callback />} />
     <Route path="/payment-success" element={<PaymentSuccess />} />
+    <Route path="/ecommerce" element={<EcommerceLayout />}>
+      <Route index element={<Navigate to="categories" replace />} />
+      <Route path="categories" element={<Categories />} />
+      <Route path="products" element={<Products />} />
+    </Route>
     <Route path="/cart" element={<CartPage />} /> {}
     <Route path="*" element={<NotFound />} />
   </Routes>
 );
 
 export default UserApp;
-

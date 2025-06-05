@@ -1,8 +1,8 @@
 import { useState } from "react";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { motion } from "framer-motion";
 import { Navbar } from "@/components/Navbar";
-import { Footer } from "@/components/Admin/Footer";
+import { Footer } from "@/components/Footer";
 import { ScrollToTop } from "@/components/ScrollToTop";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
@@ -10,8 +10,10 @@ import { AspectRatio } from "@/components/ui/aspect-ratio";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { toast } from "@/components/ui/sonner";
 import { Heart, Share, ShoppingBag, Star } from "lucide-react";
+import { useCart } from "@/Contexts/CartContext";
 
 const mockProducts = [
+
   {
     id: 1,
     name: "Diamond Studded Wristwatch",
@@ -47,19 +49,31 @@ const mockProducts = [
 const ProductDetail = () => {
   const { id } = useParams<{ id: string }>();
   const [selectedImage, setSelectedImage] = useState(0);
-  const [quantity, setQuantity] = useState(1);
+  const [quantity, setQuantity] = useState<number | null>(1);
+  const {addToCart} = useCart(); 
+
 
   const product =
     mockProducts.find((p) => p.id === Number(id)) || mockProducts[0];
 
   const handleAddToCart = () => {
-    toast.success(
-      `${quantity} ${product.name}${quantity > 1 ? "s" : ""} added`,
-      {
-        description: "Item has been added to your cart",
-      }
-    );
+  const cartItem = {
+    id: product.id,
+    name: product.name,
+    price: product.price,
+    image: product.images[0],
   };
+
+  addToCart(cartItem, quantity);
+
+  toast.success(
+    `${quantity} ${product.name}${quantity > 1 ? "s" : ""} added`,
+    {
+      description: "Item has been added to your cart",
+    }
+  );
+};
+
 
   const handleAddToWishlist = () => {
     toast.success("Added to wishlist", {

@@ -1,8 +1,7 @@
-
-import { createContext, useContext, useState } from "react";
+import { createContext, useContext, useEffect, useState } from "react";
 
 interface CartItem {
-  id: string;
+  id: number;
   name: string;
   price: number;
   quantity: number;
@@ -11,110 +10,68 @@ interface CartItem {
 
 interface CartContextType {
   items: CartItem[];
-<<<<<<< HEAD
-
-  addToCart: (item: Omit<CartItem, "quantity">) => void;
-
-  removeFromCart: (id: string) => void;
-
+  addToCart: (item: Omit<CartItem, "quantity">, quantity: number) => void;
+  removeFromCart: (id: number) => void;
   clearCart: () => void;
-
-  increaseQuantity: (id: string) => void;
-
-=======
-  addToCart: (item: Omit<CartItem, 'quantity'>) => void;
-  removeFromCart: (id: string) => void;
-  clearCart: () => void;
-  increaseQuantity: (id: string) => void;
->>>>>>> 02b2eeb3091c147e5734a6271faab730718b7924
-  decreaseQuantity: (id: string) => void;
+  increaseQuantity: (id: number) => void;
+  decreaseQuantity: (id: number) => void;
 }
 
 const CartContext = createContext<CartContextType>({
   items: [],
-<<<<<<< HEAD
-
   addToCart: () => {},
-
   removeFromCart: () => {},
-
   clearCart: () => {},
-
   increaseQuantity: () => {},
-
   decreaseQuantity: () => {},
 });
 
 export const CartProvider = ({ children }: { children: React.ReactNode }) => {
-  const [items, setItems] = useState<CartItem[]>([]);
+  const [items, setItems] = useState<CartItem[]>(() => {
+    const stored = sessionStorage.getItem("cart");
+    return stored ? JSON.parse(stored) : [];
+  });
 
-  const addToCart = (item: Omit<CartItem, "quantity">) => {
+  
+
+  const addToCart = (item: Omit<CartItem, "quantity">, quantity: number) => {
     setItems((prev) => {
       const existing = prev.find((i) => i.id === item.id);
-
+      let updatedItems;
       if (existing) {
-        return prev.map((i) =>
-          i.id === item.id ? { ...i, quantity: i.quantity + 1 } : i
+        updatedItems = prev.map((i) =>
+          i.id === item.id ? { ...i, quantity: i.quantity + quantity } : i
         );
+      } else {
+        updatedItems = [...prev, { ...item, quantity }];
       }
-
-=======
-  addToCart: () => {},
-  removeFromCart: () => {},
-  clearCart: () => {},
-  increaseQuantity: () => {},
-  decreaseQuantity: () => {},
-});
-
-export const useCart = () => useContext(CartContext);
-
-export const CartProvider = ({ children }: { children: React.ReactNode }) => {
-  const [items, setItems] = useState<CartItem[]>([]);
-
-  const addToCart = (item: Omit<CartItem, 'quantity'>) => {
-    setItems(prev => {
-      const existing = prev.find(i => i.id === item.id);
-      if (existing) {
-        return prev.map(i =>
-          i.id === item.id ? { ...i, quantity: i.quantity + 1 } : i
-        );
-      }
->>>>>>> 02b2eeb3091c147e5734a6271faab730718b7924
-      return [...prev, { ...item, quantity: 1 }];
+     
+      sessionStorage.setItem("cart", JSON.stringify(updatedItems));
+      return updatedItems;
     });
   };
+  
+  useEffect(() => {
+    sessionStorage.setItem("cart", JSON.stringify(items));
+  }, [items]);
 
-  const removeFromCart = (id: string) => {
-<<<<<<< HEAD
+  const removeFromCart = (id: number) => {
     setItems((prev) => prev.filter((item) => item.id !== id));
-=======
-    setItems(prev => prev.filter(item => item.id !== id));
->>>>>>> 02b2eeb3091c147e5734a6271faab730718b7924
   };
 
   const clearCart = () => setItems([]);
 
-  const increaseQuantity = (id: string) => {
-<<<<<<< HEAD
+  const increaseQuantity = (id: number) => {
     setItems((prev) =>
       prev.map((item) =>
-=======
-    setItems(prev =>
-      prev.map(item =>
->>>>>>> 02b2eeb3091c147e5734a6271faab730718b7924
         item.id === id ? { ...item, quantity: item.quantity + 1 } : item
       )
     );
   };
 
-  const decreaseQuantity = (id: string) => {
-<<<<<<< HEAD
+  const decreaseQuantity = (id: number) => {
     setItems((prev) =>
       prev.map((item) =>
-=======
-    setItems(prev =>
-      prev.map(item =>
->>>>>>> 02b2eeb3091c147e5734a6271faab730718b7924
         item.id === id
           ? { ...item, quantity: Math.max(1, item.quantity - 1) }
           : item
@@ -126,22 +83,11 @@ export const CartProvider = ({ children }: { children: React.ReactNode }) => {
     <CartContext.Provider
       value={{
         items,
-<<<<<<< HEAD
 
-        addToCart,
-
-        removeFromCart,
-
-        clearCart,
-
-        increaseQuantity,
-
-=======
         addToCart,
         removeFromCart,
         clearCart,
         increaseQuantity,
->>>>>>> 02b2eeb3091c147e5734a6271faab730718b7924
         decreaseQuantity,
       }}
     >
@@ -149,13 +95,9 @@ export const CartProvider = ({ children }: { children: React.ReactNode }) => {
     </CartContext.Provider>
   );
 };
-<<<<<<< HEAD
 export const useCart = () => {
   const cart = useContext(CartContext);
   if (cart === undefined)
     throw new Error("useTheme must be used within a ThemeProvider");
   return cart;
 };
-
-=======
->>>>>>> 02b2eeb3091c147e5734a6271faab730718b7924
