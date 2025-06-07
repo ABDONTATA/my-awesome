@@ -1,26 +1,65 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { useCart } from "../Contexts/CartContext";
 import { Link, useNavigate } from "react-router-dom";
+import { useAuth } from "@/Contexts/AuthProvider";
 
 interface CartItem {
+  cartId:number;
   id: number;
   name: string;
   price: number;
+  totalPrice:number;
   quantity: number;
   image?: string;
 }
 
 const CartPage: React.FC = () => {
   const {
-    items,
+    getCartProductsList,
     removeFromCart,
     clearCart,
-    increaseQuantity,
-    decreaseQuantity
+  updateCartItemQuantity
   } = useCart();
   const navigate = useNavigate();
+  const { isAuthenticated } = useAuth()!;
+  const [items, setItems] = useState<CartItem[] | null>(null);
+  const total = items?.reduce((sum, item) => sum + item.price * item.quantity, 0) || 0;
 
-  const total = items.reduce((sum, item) => sum + item.price * item.quantity, 0);
+  useEffect(() => {
+    if (isAuthenticated) {
+      const fetchCart = async () => {
+        const data = await getCartProductsList();
+        setItems(data);
+      };
+      fetchCart();
+    } else {
+      setItems([]);
+    }
+  }, [isAuthenticated]);
+
+  const handleUpdateQuantity = async (productId: number, quantity: number) => {
+  try {
+    await updateCartItemQuantity(productId, quantity);
+    setItems((prev) =>
+      prev?.map((item) =>
+        item.id === productId ? { ...item, quantity, totalPrice: item.price * quantity } : item
+      ) ?? []
+    );
+  } catch (error) {
+    console.error(error);
+  }
+};
+
+ const HandleRemoveFromCart = async (id: number) => { 
+  try { 
+     await removeFromCart(id);
+   setItems((prev) => prev.filter((item) => item.id !== id));
+
+  } catch (error) {
+    console.error(error);
+  }
+ }
+
 
   const renderCartItemImage = (item: CartItem) => (
     <div className="w-20 h-20 bg-gray-800 rounded flex items-center justify-center text-gray-400 overflow-hidden">
@@ -38,7 +77,9 @@ const CartPage: React.FC = () => {
         🛒 Your Shopping Cart
       </h1>
 
-      {items.length === 0 ? (
+      {items === null ? (
+        <p className="text-gray-400">Loading your cart...</p>
+      ) : items.length === 0 ? (
         <div className="text-center py-16 bg-gray-800 rounded-lg mt-6 shadow-inner">
           <p className="text-lg text-gray-400">Your cart is empty</p>
           <button
@@ -60,10 +101,10 @@ const CartPage: React.FC = () => {
                   {renderCartItemImage(item)}
                   <div>
                     <h3 className="text-lg font-medium text-white">{item.name}</h3>
-                    <p className="text-gray-400 text-sm">${item.price.toFixed(2)}</p>
+                    <p className="text-gray-400 text-sm">${item.totalPrice.toFixed(2)}</p>
                     <div className="mt-2 flex items-center gap-2">
                       <button
-                        onClick={() => decreaseQuantity(item.id)}
+                        onClick={() => handleUpdateQuantity(item.id, item.quantity - 1)}
                         disabled={item.quantity === 1}
                         className="px-2 py-1 border border-gray-600 text-gray-300 rounded hover:bg-gray-700 disabled:opacity-40"
                       >
@@ -71,7 +112,7 @@ const CartPage: React.FC = () => {
                       </button>
                       <span className="px-2">{item.quantity}</span>
                       <button
-                        onClick={() => increaseQuantity(item.id)}
+                        onClick={() => handleUpdateQuantity(item.id, item.quantity + 1)}
                         className="px-2 py-1 border border-gray-600 text-gray-300 rounded hover:bg-gray-700"
                       >
                         +
@@ -83,7 +124,7 @@ const CartPage: React.FC = () => {
                   </div>
                 </div>
                 <button
-                  onClick={() => removeFromCart(item.id)}
+                  onClick={() => HandleRemoveFromCart(item.id)}
                   className="text-red-400 border border-red-500 px-4 py-2 rounded-md hover:bg-red-600 hover:text-white transition"
                 >
                   Remove
@@ -105,8 +146,12 @@ const CartPage: React.FC = () => {
                 Clear Cart
               </button>
               <Link
-                to="/payment"
-                className="bg-green-600 text-white px-6 py-2 rounded-md hover:bg-green-700 transition"
+                to={items.length > 0 ? "/payment" : "#"}
+                className={`px-6 py-2 rounded-md transition ${
+                  items.length > 0
+                    ? "bg-green-600 hover:bg-green-700 text-white"
+                    : "bg-gray-600 text-gray-400 cursor-not-allowed"
+                }`}
               >
                 Proceed to Checkout
               </Link>

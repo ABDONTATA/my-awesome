@@ -5,7 +5,20 @@ import { useInView } from "react-intersection-observer";
 import { cn } from "@/lib/utils";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import { useProduct } from "@/Contexts/ProductsProvider";
+interface CategoryInfo  {
+  name: string;
+}
 
+interface ProductView {
+  productId: number;
+  name: string;
+  price: number;
+  imageUrl: string;
+  rating: number;
+  isNew: boolean;
+  inStock: boolean;
+  category: CategoryInfo;
+}
 export function FeaturedProductsSection() {
   const [currentIndex, setCurrentIndex] = useState(0);
   const { ref, inView } = useInView({
@@ -23,7 +36,7 @@ export function FeaturedProductsSection() {
     }
   }, [inView]);
 
-  const [featuredProducts,setFeaturedProducts] = useState([]);
+  const [featuredProducts, setFeaturedProducts] = useState<ProductView[]>([]);
   const {getProductsList} = useProduct()!;
 
   const scrollToNext = () => {
@@ -54,8 +67,7 @@ export function FeaturedProductsSection() {
   useEffect(() => {
   
         const addProducts = async () => {
-        const products = await getProductsList();
-        setFeaturedProducts(products);
+        setFeaturedProducts(await getProductsList(true));
       };
       addProducts();
     
@@ -113,7 +125,7 @@ export function FeaturedProductsSection() {
           >
             {featuredProducts.map((product, index) => (
               <div
-                key={product.id}
+                key={product.productId}
                 className={cn(
                   "min-w-[25%] sm:min-w-[50%] lg:min-w-[25%] p-3 opacity-0 transform translate-y-10",
                   isVisible &&
@@ -131,7 +143,7 @@ export function FeaturedProductsSection() {
         <div className="sm:hidden grid grid-cols-1 gap-6">
           {featuredProducts.slice(0, 4).map((product, index) => (
             <div
-              key={product.id}
+              key={product.productId}
               className={cn(
                 "opacity-0 transform translate-y-10",
                 isVisible &&

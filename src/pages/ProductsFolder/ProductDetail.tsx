@@ -1,5 +1,4 @@
-import { useState } from "react";
-import { useNavigate, useParams } from "react-router-dom";
+import { useEffect, useState } from "react";
 import { motion } from "framer-motion";
 import { Navbar } from "@/components/Navbar";
 import { Footer } from "@/components/Footer";
@@ -11,87 +10,90 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { toast } from "@/components/ui/sonner";
 import { Heart, Share, ShoppingBag, Star } from "lucide-react";
 import { useCart } from "@/Contexts/CartContext";
+import { useProduct } from "@/Contexts/ProductsProvider";
+import { useParams } from "react-router-dom";
+import { useAuth } from "@/Contexts/AuthProvider";
 
-const mockProducts = [
+interface ProductDetails {
+  material: string;
+  dimensions: string;
+  weight: string;
+  origin: string;
+  warranty: string;
+}
 
-  {
-    id: 1,
-    name: "Diamond Studded Wristwatch",
-    price: 4599,
-    category: "Watches",
-    description:
-      "Handcrafted luxury wristwatch with diamond embellishments and premium leather strap. Water resistant up to 100 meters with Swiss movement.",
-    details: {
-      material: "18k Gold, Diamond, Premium Leather",
-      dimensions: "40mm x 10mm",
-      weight: "150g",
-      origin: "Switzerland",
-      warranty: "Lifetime",
-    },
-    features: [
-      "Water resistant",
-      "Scratch resistant sapphire crystal",
-      "Swiss movement",
-      "Self-winding mechanism",
-    ],
-    images: [
-      "https://images.unsplash.com/photo-1523170335258-f5ed11844a49?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1400&q=80",
-      "https://images.unsplash.com/photo-1533139502658-0198f920d8e8?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1400&q=80",
-      "https://images.unsplash.com/photo-1548171915-52b06b96b6c6?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1400&q=80",
-    ],
-    rating: 4.9,
-    reviewCount: 124,
-    isNew: true,
-    inStock: true,
-  },
-];
+interface Product {
+  productId: number;
+  name: string;
+  price: number;
+  category: string;
+  description: string;
+  details: ProductDetails;
+  features: string[];
+  images: string[];
+  rating?: number;
+  reviewCount?: number;
+  isNew?: boolean;
+  inStock?: boolean;
+}
 
 const ProductDetail = () => {
   const { id } = useParams<{ id: string }>();
   const [selectedImage, setSelectedImage] = useState(0);
-  const [quantity, setQuantity] = useState<number | null>(1);
-  const {addToCart} = useCart(); 
+  const [quantity, setQuantity] = useState<number>(1);
+  const { addToCart } = useCart();
+  const [product, setProduct] = useState<Product>();
+  const { getProductDetails } = useProduct()!;
+  const {isAuthenticated} = useAuth();
 
+  useEffect(() => {
+    const fetchProduct = async () => {
+      const data = await getProductDetails(Number(id));
+      setProduct(data);
+    };
+    fetchProduct();
+  }, [id]);
 
-  const product =
-    mockProducts.find((p) => p.id === Number(id)) || mockProducts[0];
+  const handleAddToCart = async () => {
+  if (!product) return;
 
-  const handleAddToCart = () => {
-  const cartItem = {
-    id: product.id,
-    name: product.name,
-    price: product.price,
-    image: product.images[0],
-  };
+  if (!isAuthenticated) {
+    toast.warning("You need to be logged in to add items to the cart", {
+      description: "Please log in or create an account.",
+    });
+    return;
+  }
 
-  addToCart(cartItem, quantity);
-
-  toast.success(
-    `${quantity} ${product.name}${quantity > 1 ? "s" : ""} added`,
-    {
+  try {
+    await addToCart(product.productId, quantity);
+    toast.success(`${quantity} ${product.name}${quantity > 1 ? "s" : ""} added`, {
       description: "Item has been added to your cart",
-    }
-  );
+    });
+  } catch (error: any) {
+    toast.error("Error: the product wasn't added to the cart");
+  }
 };
 
 
   const handleAddToWishlist = () => {
+    if (!product) return;
+
     toast.success("Added to wishlist", {
       description: `${product.name} has been added to your wishlist`,
     });
   };
+
+  if (!product) return null;
 
   return (
     <div className="min-h-screen flex flex-col">
       <Navbar />
       <main className="flex-grow pt-24 pb-16">
         <div className="container px-4 mx-auto">
-          {}
           <div className="text-sm text-luxury-gray mb-6">
             Home / Products / {product.category} / {product.name}
           </div>
 
-          {}
           <div className="grid grid-cols-1 md:grid-cols-2 gap-8 lg:gap-16">
             <motion.div
               initial={{ opacity: 0, y: 20 }}
@@ -130,7 +132,6 @@ const ProductDetail = () => {
               </div>
             </motion.div>
 
-            {}
             <motion.div
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
@@ -150,11 +151,16 @@ const ProductDetail = () => {
 
               <div className="flex items-center mb-4">
                 <div className="flex items-center">
-                  <Star className="h-4 w-4 fill-luxury-gold text-luxury-gold" />
-                  <Star className="h-4 w-4 fill-luxury-gold text-luxury-gold" />
-                  <Star className="h-4 w-4 fill-luxury-gold text-luxury-gold" />
-                  <Star className="h-4 w-4 fill-luxury-gold text-luxury-gold" />
-                  <Star className="h-4 w-4 fill-luxury-gold/50 text-luxury-gold" />
+                  {Array.from({ length: 5 }).map((_, i) => (
+                    <Star
+                      key={i}
+                      className={`h-4 w-4 ${
+                        i < (product.rating || 0)
+                          ? "fill-luxury-gold text-luxury-gold"
+                          : "fill-luxury-gold/50 text-luxury-gold"
+                      }`}
+                    />
+                  ))}
                 </div>
                 <span className="ml-2 text-sm text-luxury-gray">
                   {product.rating} ({product.reviewCount} reviews)
@@ -227,7 +233,6 @@ const ProductDetail = () => {
                 </Button>
               </div>
 
-              {}
               <Tabs defaultValue="details">
                 <TabsList className="w-full justify-start mb-4">
                   <TabsTrigger value="details">Details</TabsTrigger>

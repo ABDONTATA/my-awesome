@@ -3,7 +3,7 @@ import Index from "./pages/Index";
 import Contact from "./pages/Contact";
 import Login from "./pages/AuthFolder/Login";
 import Register from "./pages/AuthFolder/Register";
-import Product from "./pages/ProductsFolder/Product";
+import Product from "./pages/ProductsFolder/product";
 import ProductDetail from "./pages/ProductsFolder/ProductDetail";
 import Settings from "./pages/Settings";
 import Payment from "./pages/PaymentFolder/Payment";
@@ -12,10 +12,7 @@ import NotFound from "./pages/NotFound";
 import { Profile } from "./pages/Profile";
 import { OAuth2Callback } from "./Contexts/OAuth2Callback";
 import CartPage from "./pages/CartPage";
-import { EcommercePage } from "./components/Ecommerce/EcommercePage";
-import { EcommerceLayout } from "./components/Ecommerce/EcommerceLayout";
-import { Categories } from "./components/Ecommerce/Categories";
-import { Products } from "./components/Ecommerce/Products";
+
 const UserApp = () => (
   <Routes>
     <Route path="/" element={<Index />} />
@@ -29,11 +26,6 @@ const UserApp = () => (
     <Route path="/payment" element={<Payment />} />
     <Route path="/auth/callback" element={<OAuth2Callback />} />
     <Route path="/payment-success" element={<PaymentSuccess />} />
-    <Route path="/ecommerce" element={<EcommerceLayout />}>
-      <Route index element={<Navigate to="categories" replace />} />
-      <Route path="categories" element={<Categories />} />
-      <Route path="products" element={<Products />} />
-    </Route>
     <Route path="/cart" element={<CartPage />} /> {}
     <Route path="*" element={<NotFound />} />
   </Routes>

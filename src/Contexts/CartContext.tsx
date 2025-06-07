@@ -1,84 +1,113 @@
 import { createContext, useContext, useEffect, useState } from "react";
+import { useAuth } from "./AuthProvider";
 
 interface CartItem {
+  cartId:number;
   id: number;
   name: string;
   price: number;
+  totalPrice: number;
   quantity: number;
   image: string;
 }
 
 interface CartContextType {
-  items: CartItem[];
-  addToCart: (item: Omit<CartItem, "quantity">, quantity: number) => void;
-  removeFromCart: (id: number) => void;
+  items : CartItem[];
+  addToCart: (productId: number, quantity: number) => Promise<void>;
+  removeFromCart: (id: number) => Promise<void>;
   clearCart: () => void;
-  increaseQuantity: (id: number) => void;
-  decreaseQuantity: (id: number) => void;
+  getCartProductsList: () => Promise<CartItem[]>;
+  updateCartItemQuantity: (id: number, quantity: number) => Promise<void>;
 }
 
-const CartContext = createContext<CartContextType>({
-  items: [],
-  addToCart: () => {},
-  removeFromCart: () => {},
-  clearCart: () => {},
-  increaseQuantity: () => {},
-  decreaseQuantity: () => {},
-});
+const CartContext = createContext<CartContextType | null>(null);
 
+const baseUrl = "http://localhost:8080/api/cart";
 export const CartProvider = ({ children }: { children: React.ReactNode }) => {
-  const [items, setItems] = useState<CartItem[]>(() => {
-    const stored = sessionStorage.getItem("cart");
-    return stored ? JSON.parse(stored) : [];
-  });
+  const [items, setItems] = useState<CartItem[]>();
+  const { accessToken } = useAuth()!;
 
-  
+  const addToCart = async (productId: number, quantity: number) => {
+    try {
+      await fetch(`${baseUrl}/add`, {
+        method: "POST",
+        headers: {
+          "Content-type": "application/json",
+          Authorization: `Bearer ${accessToken}`,
+        },
+        body: JSON.stringify({ productId, quantity }),
+        credentials: "include",
+      });
+    } catch (error) {
+      throw error;
+    }
+  };
+  const getCartProductsList = async () => {
+    try {
+      const response = await fetch(`${baseUrl}/getCartProducts`, {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${accessToken}`,
+        },
+      });
 
-  const addToCart = (item: Omit<CartItem, "quantity">, quantity: number) => {
-    setItems((prev) => {
-      const existing = prev.find((i) => i.id === item.id);
-      let updatedItems;
-      if (existing) {
-        updatedItems = prev.map((i) =>
-          i.id === item.id ? { ...i, quantity: i.quantity + quantity } : i
-        );
-      } else {
-        updatedItems = [...prev, { ...item, quantity }];
+      if (!response.ok) {
+        throw new Error("Failed to fetch cart products");
       }
-     
-      sessionStorage.setItem("cart", JSON.stringify(updatedItems));
-      return updatedItems;
-    });
-  };
-  
-  useEffect(() => {
-    sessionStorage.setItem("cart", JSON.stringify(items));
-  }, [items]);
 
-  const removeFromCart = (id: number) => {
-    setItems((prev) => prev.filter((item) => item.id !== id));
+      const data = await response.json();
+      return data;
+    } catch (error) {
+      console.error("Error fetching cart products:", error);
+      return [];
+    }
   };
+
+ const removeFromCart = async (id: number) => {
+  try {
+    const response = await fetch(`${baseUrl}/delete/${id}`, {
+      method: "DELETE",
+      headers: {
+        Authorization: `Bearer ${accessToken}`,
+      },
+    });
+
+    if (!response.ok) {
+      throw new Error("Failed to remove item from cart");
+    }
+  
+  } catch (error) {
+    console.error("Error removing item from cart:", error);
+  }
+};
+
 
   const clearCart = () => setItems([]);
 
-  const increaseQuantity = (id: number) => {
-    setItems((prev) =>
-      prev.map((item) =>
-        item.id === id ? { ...item, quantity: item.quantity + 1 } : item
-      )
-    );
-  };
+const updateCartItemQuantity = async (productId: number, quantity: number) => {
+  try {
+    const response = await fetch(`${baseUrl}/update`, {
+      method: "PUT",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${accessToken}`,
+      },
+      body: JSON.stringify({ productId, quantity }),
+    });
 
-  const decreaseQuantity = (id: number) => {
-    setItems((prev) =>
-      prev.map((item) =>
-        item.id === id
-          ? { ...item, quantity: Math.max(1, item.quantity - 1) }
-          : item
-      )
-    );
-  };
+    if (!response.ok) {
+      throw new Error("Failed to update cart item quantity");
+    }
 
+    const updatedItems = await getCartProductsList();
+    setItems(updatedItems);
+  } catch (error) {
+    console.error("Error updating quantity:", error);
+  }
+};
+
+  
   return (
     <CartContext.Provider
       value={{
@@ -87,8 +116,9 @@ export const CartProvider = ({ children }: { children: React.ReactNode }) => {
         addToCart,
         removeFromCart,
         clearCart,
-        increaseQuantity,
-        decreaseQuantity,
+        getCartProductsList,
+        updateCartItemQuantity
+
       }}
     >
       {children}

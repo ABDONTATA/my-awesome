@@ -74,15 +74,16 @@ export function Navbar() {
                 value={searchQuery}
                 onChange={handleChange}
                 placeholder="Search..."
-                className={`p-2 bg-gray-100 rounded-md text-black ${user?.userRole === "ADMIN" ? "w-[60vh]" : "w-[80vh]"}`}
+                className={`p-2 bg-gray-100 rounded-md text-black ${
+                  user?.userRole === "ADMIN" ? "w-[60vh]" : "w-[80vh]"
+                }`}
               />
               <i className="bx bx-search-alt-2 absolute right-3 top-1/2 transform -translate-y-1/2 cursor-pointer text-2xl text-black"></i>
             </div>
 
             <div className="flex items-center space-x-4">
-               <ModeToggle />
+              <ModeToggle />
               {isAuthenticated ? (
-                
                 <button
                   onClick={() => {
                     setIsMenuOpen(false);
@@ -130,7 +131,7 @@ export function Navbar() {
                     {item.name}
                   </Link>
                 ))}
-                
+
                 {isAuthenticated ? (
                   <Link
                     to="/profile"
@@ -142,13 +143,13 @@ export function Navbar() {
                   </Link>
                 ) : (
                   <Link
-                      to="/login"
-                      className="py-2 luxury-link font-medium flex items-center"
-                      onClick={() => setIsMenuOpen(false)}
-                    >
-                      <User className="h-5 w-5 mr-2" />
-                      Login
-                    </Link>
+                    to="/login"
+                    className="py-2 luxury-link font-medium flex items-center"
+                    onClick={() => setIsMenuOpen(false)}
+                  >
+                    <User className="h-5 w-5 mr-2" />
+                    Login
+                  </Link>
                 )}
 
                 <Link
