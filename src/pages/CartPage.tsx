@@ -4,11 +4,9 @@ import { Link, useNavigate } from "react-router-dom";
 import { useAuth } from "@/Contexts/AuthProvider";
 
 interface CartItem {
-  cartId:number;
-  id: number;
+  productId: number;
   name: string;
   price: number;
-  totalPrice:number;
   quantity: number;
   image?: string;
 }
@@ -42,7 +40,7 @@ const CartPage: React.FC = () => {
     await updateCartItemQuantity(productId, quantity);
     setItems((prev) =>
       prev?.map((item) =>
-        item.id === productId ? { ...item, quantity, totalPrice: item.price * quantity } : item
+        item.productId === productId ? { ...item, quantity, totalPrice: item.price * quantity } : item
       ) ?? []
     );
   } catch (error) {
@@ -53,7 +51,7 @@ const CartPage: React.FC = () => {
  const HandleRemoveFromCart = async (id: number) => { 
   try { 
      await removeFromCart(id);
-   setItems((prev) => prev.filter((item) => item.id !== id));
+   setItems((prev) => prev.filter((item) => item.productId !== id));
 
   } catch (error) {
     console.error(error);
@@ -94,17 +92,17 @@ const CartPage: React.FC = () => {
           <div className="mb-10 rounded-lg overflow-hidden divide-y divide-gray-700 shadow-md bg-gray-800">
             {items.map((item) => (
               <div
-                key={item.id}
+                key={item.productId}
                 className="px-6 py-5 flex justify-between items-center"
               >
                 <div className="flex items-center gap-6">
                   {renderCartItemImage(item)}
                   <div>
                     <h3 className="text-lg font-medium text-white">{item.name}</h3>
-                    <p className="text-gray-400 text-sm">${item.totalPrice.toFixed(2)}</p>
+                    <p className="text-gray-400 text-sm">${item.price.toFixed(2)}</p>
                     <div className="mt-2 flex items-center gap-2">
                       <button
-                        onClick={() => handleUpdateQuantity(item.id, item.quantity - 1)}
+                        onClick={() => handleUpdateQuantity(item.productId, item.quantity - 1)}
                         disabled={item.quantity === 1}
                         className="px-2 py-1 border border-gray-600 text-gray-300 rounded hover:bg-gray-700 disabled:opacity-40"
                       >
@@ -112,7 +110,7 @@ const CartPage: React.FC = () => {
                       </button>
                       <span className="px-2">{item.quantity}</span>
                       <button
-                        onClick={() => handleUpdateQuantity(item.id, item.quantity + 1)}
+                        onClick={() => handleUpdateQuantity(item.productId, item.quantity + 1)}
                         className="px-2 py-1 border border-gray-600 text-gray-300 rounded hover:bg-gray-700"
                       >
                         +
@@ -124,7 +122,7 @@ const CartPage: React.FC = () => {
                   </div>
                 </div>
                 <button
-                  onClick={() => HandleRemoveFromCart(item.id)}
+                  onClick={() => HandleRemoveFromCart(item.productId)}
                   className="text-red-400 border border-red-500 px-4 py-2 rounded-md hover:bg-red-600 hover:text-white transition"
                 >
                   Remove

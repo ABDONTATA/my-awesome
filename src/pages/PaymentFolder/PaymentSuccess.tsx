@@ -1,5 +1,6 @@
 import { motion } from "framer-motion";
-import { Link } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
+import { useEffect, useState } from "react";
 import { Navbar } from "@/components/Navbar";
 import { Footer } from "@/components/Footer";
 import { ScrollToTop } from "@/components/ScrollToTop";
@@ -12,9 +13,64 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { CheckCircle, Package, ShoppingBag } from "lucide-react";
+import { useAuth } from "@/Contexts/AuthProvider";
+
+interface OrderItem {
+  id: number;
+  productName: string;
+  price: number;
+}
+
+interface OrderData {
+  orderNumber: string;
+  createdAt: string;
+  userEmail: string;
+  totalAmount: number;
+  paymentMethod: string;
+  shippingMethod: string;
+  items: OrderItem[];
+}
 
 const PaymentSuccess = () => {
-  const orderId = "LUXE-" + Math.floor(10000000 + Math.random() * 90000000);
+  const { orderId } = useParams();
+  const [orderData, setOrderData] = useState<OrderData>();
+  const [loading, setLoading] = useState(true);
+  const { accessToken } = useAuth()!;
+
+  useEffect(() => {
+    const fetchOrder = async () => {
+      try {
+        const response = await fetch(
+          `http://localhost:8080/api/order/get/${orderId}`,
+          {
+            headers: {
+              Authorization: `Bearer ${accessToken}`,
+            },
+            credentials: "include",
+          }
+        );
+
+        if (!response.ok) throw new Error("Failed to fetch order details");
+
+        const data = await response.json();
+        setOrderData(data);
+      } catch (error) {
+        console.error("Error fetching order:", error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    if (orderId) fetchOrder();
+  }, [orderId]);
+
+  if (loading) {
+    return <div className="text-center pt-32">Loading...</div>;
+  }
+
+  if (!orderData) {
+    return <div className="text-center pt-32">Order not found.</div>;
+  }
 
   return (
     <div className="min-h-screen flex flex-col">
@@ -57,61 +113,54 @@ const PaymentSuccess = () => {
                     <h3 className="font-semibold text-sm text-muted-foreground mb-1">
                       Order Number
                     </h3>
-                    <p className="font-mono">{orderId}</p>
+                    <p className="font-mono">{orderData.orderNumber}</p>
                   </div>
                   <div>
                     <h3 className="font-semibold text-sm text-muted-foreground mb-1">
                       Date
                     </h3>
-                    <p>{new Date().toLocaleDateString()}</p>
+                    <p>{new Date(orderData.createdAt).toLocaleDateString()}</p>
                   </div>
                   <div>
                     <h3 className="font-semibold text-sm text-muted-foreground mb-1">
                       Email
                     </h3>
-                    <p>customer@example.com</p>
+                    <p>{orderData.userEmail}</p>
                   </div>
                   <div>
                     <h3 className="font-semibold text-sm text-muted-foreground mb-1">
                       Total
                     </h3>
-                    <p>$4,898.00</p>
+                    <p>${orderData.totalAmount}</p>
                   </div>
                   <div>
                     <h3 className="font-semibold text-sm text-muted-foreground mb-1">
                       Payment Method
                     </h3>
-                    <p>Credit Card (•••• 4242)</p>
+                    <p>{orderData.paymentMethod}</p>
                   </div>
                   <div>
                     <h3 className="font-semibold text-sm text-muted-foreground mb-1">
                       Shipping
                     </h3>
-                    <p>Express (1-2 business days)</p>
+                    <p>{orderData.shippingMethod}</p>
                   </div>
                 </div>
 
                 <div className="mt-6 pt-6 border-t">
                   <h3 className="font-semibold mb-4">Order Summary</h3>
                   <div className="space-y-4">
-                    <div className="flex justify-between">
-                      <div className="flex items-center space-x-3">
-                        <div className="h-10 w-10 bg-secondary/50 rounded flex items-center justify-center">
-                          <ShoppingBag className="h-5 w-5" />
+                    {orderData.items.map((item: any) => (
+                      <div key={item.id} className="flex justify-between">
+                        <div className="flex items-center space-x-3">
+                          <div className="h-10 w-10 bg-secondary/50 rounded flex items-center justify-center">
+                            <ShoppingBag className="h-5 w-5" />
+                          </div>
+                          <span>{item.productName}</span>
                         </div>
-                        <span>Diamond Studded Wristwatch</span>
+                        <div>${item.price}</div>
                       </div>
-                      <div>$4,599.00</div>
-                    </div>
-                    <div className="flex justify-between">
-                      <div className="flex items-center space-x-3">
-                        <div className="h-10 w-10 bg-secondary/50 rounded flex items-center justify-center">
-                          <ShoppingBag className="h-5 w-5" />
-                        </div>
-                        <span>Leather Wallet</span>
-                      </div>
-                      <div>$299.00</div>
-                    </div>
+                    ))}
                   </div>
                 </div>
               </CardContent>
@@ -119,7 +168,7 @@ const PaymentSuccess = () => {
                 <div className="text-sm text-center w-full">
                   <p>
                     A confirmation email has been sent to{" "}
-                    <span className="font-semibold">customer@example.com</span>
+                    <span className="font-semibold">{orderData.userEmail}</span>
                   </p>
                 </div>
               </CardFooter>

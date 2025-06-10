@@ -101,6 +101,12 @@ importers:
       '@radix-ui/react-tooltip':
         specifier: ^1.1.4
         version: 1.2.7(@types/react-dom@18.3.7(@types/react@18.3.21))(@types/react@18.3.21)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
+      '@stripe/react-stripe-js':
+        specifier: ^3.7.0
+        version: 3.7.0(@stripe/stripe-js@7.3.1)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
+      '@stripe/stripe-js':
+        specifier: ^7.3.1
+        version: 7.3.1
       '@tailwindcss/vite':
         specifier: ^4.1.7
         version: 4.1.7(vite@5.4.19(@types/node@22.15.20)(lightningcss@1.30.1))
@@ -1541,6 +1547,17 @@ packages:
     resolution: {integrity: sha512-h1J+Yzjo/X+0EAvR2kIXJDuTuyT7drc+t2ALY0nIcGPbTatNOf0VWdhEA2Z4AAjv6X1NJV7SYo5oCTYRJhSlVA==}
     cpu: [x64]
     os: [win32]
+
+  '@stripe/react-stripe-js@3.7.0':
+    resolution: {integrity: sha512-PYls/2S9l0FF+2n0wHaEJsEU8x7CmBagiH7zYOsxbBlLIHEsqUIQ4MlIAbV9Zg6xwT8jlYdlRIyBTHmO3yM7kQ==}
+    peerDependencies:
+      '@stripe/stripe-js': '>=1.44.1 <8.0.0'
+      react: '>=16.8.0 <20.0.0'
+      react-dom: '>=16.8.0 <20.0.0'
+
+  '@stripe/stripe-js@7.3.1':
+    resolution: {integrity: sha512-pTzb864TQWDRQBPLgSPFRoyjSDUqpCkbEgTzpsjiTjGz1Z5SxZNXJek28w1s6Dyry4CyW4/Izj5jHE/J9hCJYQ==}
+    engines: {node: '>=12.16'}
 
   '@swc/core-darwin-arm64@1.11.24':
     resolution: {integrity: sha512-dhtVj0PC1APOF4fl5qT2neGjRLgHAAYfiVP8poJelhzhB/318bO+QCFWAiimcDoyMgpCXOhTp757gnoJJrheWA==}
@@ -4185,6 +4202,15 @@ snapshots:
 
   '@rollup/rollup-win32-x64-msvc@4.41.0':
     optional: true
+
+  '@stripe/react-stripe-js@3.7.0(@stripe/stripe-js@7.3.1)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)':
+    dependencies:
+      '@stripe/stripe-js': 7.3.1
+      prop-types: 15.8.1
+      react: 18.3.1
+      react-dom: 18.3.1(react@18.3.1)
+
+  '@stripe/stripe-js@7.3.1': {}
 
   '@swc/core-darwin-arm64@1.11.24':
     optional: true

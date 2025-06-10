@@ -3,7 +3,15 @@ import React from 'react';
 
 export const Profile: React.FC = () => {
   const { user } = useAuth()!;
-
+ // To do : khas les adresses :
+ 
+ /*
+  private String street;
+  private String city;
+  private String state;
+  private String postalCode;
+  private String country;
+*/
   return (
     <div className="min-h-screen bg-gradient-to-b from-gray-100 to-gray-200 py-12 px-4">
       <div className="max-w-3xl mx-auto bg-white rounded-3xl shadow-xl overflow-hidden">

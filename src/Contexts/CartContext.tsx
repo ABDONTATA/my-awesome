@@ -3,7 +3,7 @@ import { useAuth } from "./AuthProvider";
 
 interface CartItem {
   cartId:number;
-  id: number;
+  productId: number;
   name: string;
   price: number;
   totalPrice: number;
