@@ -111,6 +111,18 @@
 .no-scrollbar::-webkit-scrollbar {
   display: none;
 }
+@keyframes float {
+  0%, 100% { transform: translateY(0) rotate(0deg); }
+  50% { transform: translateY(-20px) rotate(2deg); }
+}
+
+.animate-float {
+  animation: float 8s ease-in-out infinite;
+}
+
+.animate-float-delay {
+  animation: float 8s ease-in-out 2s infinite;
+}
 
 /* Hide scrollbar for IE, Edge and Firefox */
 .no-scrollbar {

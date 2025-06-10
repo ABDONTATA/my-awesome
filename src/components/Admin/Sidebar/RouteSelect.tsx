@@ -36,7 +36,7 @@ export const RouteSelect = () => {
       <SidebarItem Icon={Paperclip} title="Invoices" to="/invoices" />
       <SidebarItem Icon={LinkIcon} title="Integrations" to="/integrations" />
       <SidebarItem Icon={DollarSign} title="Finance" to="/finance" />
-      <SidebarItem Icon={ShoppingBag} title="eCommerce" to="/ecommerce" />
+      <SidebarItem Icon={ShoppingBag} title="eCommerce" to="/EcommerceLayout" />
       <SidebarItem Icon={LogOut} title="Logout" onClick={handleLogout} />
     </div>
   );

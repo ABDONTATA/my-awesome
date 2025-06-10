@@ -21,59 +21,57 @@ export const CommandMenu = ({
 
     document.addEventListener("keydown", down);
     return () => document.removeEventListener("keydown", down);
-  }, []);
+  }, [setOpen]);
 
   return (
     <Command.Dialog
       open={open}
       onOpenChange={setOpen}
       label="Global Command Menu"
-      className="fixed inset-0 bg-stone-950/50"
+      className="fixed inset-0 bg-gray-900/70 flex items-start justify-center p-4"
       onClick={() => setOpen(false)}
     >
       <div
         onClick={(e) => e.stopPropagation()}
-        className="bg-white rounded-lg shadow-xl border-stone-300 border overflow-hidden w-full max-w-lg mx-auto mt-12"
+        className="bg-gray-900 rounded-lg shadow-xl border border-gray-700 overflow-hidden w-full max-w-lg mt-16"
       >
         <Command.Input
           value={value}
           onValueChange={setValue}
           placeholder="What do you need?"
-          className="relative border-b border-stone-300 p-3 text-lg w-full placeholder:text-stone-400 focus:outline-none"
+          className="w-full p-4 text-lg bg-gray-900 border-b border-gray-700 text-white placeholder-gray-500 focus:outline-none"
+          autoFocus
         />
-        <Command.List className="p-3">
-          <Command.Empty>
+        <Command.List className="p-3 max-h-72 overflow-y-auto">
+          <Command.Empty className="text-gray-400 text-sm px-2 py-4">
             No results found for{" "}
-            <span className="text-violet-500">"{value}"</span>
+            <span className="text-yellow-400">"{value}"</span>
           </Command.Empty>
 
-          <Command.Group heading="Team" className="text-sm mb-3 text-stone-400">
-            <Command.Item className="flex cursor-pointer transition-colors p-2 text-sm text-stone-950 hover:bg-stone-200 rounded items-center gap-2">
-              <Plus />
+          <Command.Group heading="Team" className="text-sm mb-3 text-gray-400 px-2">
+            <Command.Item className="flex cursor-pointer p-2 rounded gap-2 items-center text-white hover:bg-yellow-900 transition-colors">
+              <Plus className="text-yellow-400" />
               Invite Member
             </Command.Item>
-            <Command.Item className="flex cursor-pointer transition-colors p-2 text-sm text-stone-950 hover:bg-stone-200 rounded items-center gap-2">
-              <Eye />
+            <Command.Item className="flex cursor-pointer p-2 rounded gap-2 items-center text-white hover:bg-yellow-900 transition-colors">
+              <Eye className="text-yellow-400" />
               See Org Chart
             </Command.Item>
           </Command.Group>
 
-          <Command.Group
-            heading="Integrations"
-            className="text-sm text-stone-400 mb-3"
-          >
-            <Command.Item className="flex cursor-pointer transition-colors p-2 text-sm text-stone-950 hover:bg-stone-200 rounded items-center gap-2">
-              <Link />
+          <Command.Group heading="Integrations" className="text-sm mb-3 text-gray-400 px-2">
+            <Command.Item className="flex cursor-pointer p-2 rounded gap-2 items-center text-white hover:bg-yellow-900 transition-colors">
+              <Link className="text-yellow-400" />
               Link Services
             </Command.Item>
-            <Command.Item className="flex cursor-pointer transition-colors p-2 text-sm text-stone-950 hover:bg-stone-200 rounded items-center gap-2">
-              <Phone />
+            <Command.Item className="flex cursor-pointer p-2 rounded gap-2 items-center text-white hover:bg-yellow-900 transition-colors">
+              <Phone className="text-yellow-400" />
               Contact Support
             </Command.Item>
           </Command.Group>
 
-          <Command.Item className="flex cursor-pointer transition-colors p-2 text-sm text-stone-50 hover:bg-stone-700 bg-stone-950 rounded items-center gap-2">
-            <LogOut />
+          <Command.Item className="flex cursor-pointer p-2 rounded gap-2 items-center text-yellow-400 hover:bg-yellow-700 bg-gray-800 transition-colors">
+            <LogOut className="text-yellow-400" />
             Sign Out
           </Command.Item>
         </Command.List>
