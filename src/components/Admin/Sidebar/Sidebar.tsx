@@ -5,14 +5,17 @@ import { Plan } from "./Plan";
 
 export const Sidebar = () => {
   return (
-    <div>
-      <div className="overflow-y-scroll sticky top-4 h-[calc(100vh-32px-48px)]">
-        <AccountToggle />
+    <aside className="h-screen w-72 bg-black text-white flex flex-col justify-between p-6 shadow-xl">
+      <div className="space-y-6">
+        <h1 className="text-2xl font-bold text-yellow-400">LUXE</h1>
         <SearchBar />
         <RouteSelect />
+        <AccountToggle />
       </div>
 
-      <Plan />
-    </div>
+      <div className="pt-6 border-t border-yellow-400">
+        <Plan />
+      </div>
+    </aside>
   );
 };
