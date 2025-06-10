@@ -1,3 +1,4 @@
+import { useState } from "react";
 import { useAuth } from "@/Contexts/AuthProvider";
 import {
   Home,
@@ -8,6 +9,10 @@ import {
   LogOut,
   LucideIcon,
   ShoppingBag,
+  ChevronDown,
+  ChevronUp,
+  Package,
+  Folder,
 } from "lucide-react";
 import { NavLink } from "react-router-dom";
 
@@ -36,7 +41,16 @@ export const RouteSelect = () => {
       <SidebarItem Icon={Paperclip} title="Invoices" to="/invoices" />
       <SidebarItem Icon={LinkIcon} title="Integrations" to="/integrations" />
       <SidebarItem Icon={DollarSign} title="Finance" to="/finance" />
-      <SidebarItem Icon={ShoppingBag} title="eCommerce" to="/EcommerceLayout" />
+
+      <SidebarCollapsible Icon={ShoppingBag} title="eCommerce">
+        <SidebarItem Icon={Package} title="Products" to="/ecommerce/products" />
+        <SidebarItem
+          Icon={Folder}
+          title="Categories"
+          to="/ecommerce/categories"
+        />
+      </SidebarCollapsible>
+
       <SidebarItem Icon={LogOut} title="Logout" onClick={handleLogout} />
     </div>
   );
@@ -49,8 +63,7 @@ const SidebarItem = ({ Icon, title, to, onClick }: SidebarItemProps) => {
   const hoverLuxury =
     "hover:bg-gradient-to-r hover:from-violet-100 hover:to-transparent hover:text-violet-700";
 
-  const commonFocus =
-    "focus:outline-none focus:ring-0 focus-visible:ring-0";
+  const commonFocus = "focus:outline-none focus:ring-0 focus-visible:ring-0";
 
   const fullClass = `${baseClasses} ${hoverLuxury} ${commonFocus}`;
 
@@ -77,5 +90,38 @@ const SidebarItem = ({ Icon, title, to, onClick }: SidebarItemProps) => {
       <Icon className="text-violet-500 w-5 h-5" />
       <span>{title}</span>
     </button>
+  );
+};
+
+const SidebarCollapsible = ({
+  Icon,
+  title,
+  children,
+}: {
+  Icon: LucideIcon;
+  title: string;
+  children: React.ReactNode;
+}) => {
+  const [open, setOpen] = useState(false);
+
+  return (
+    <div>
+      <button
+        onClick={() => setOpen((prev) => !prev)}
+        className="flex items-center justify-between w-full px-3 py-2 text-sm font-medium rounded-md hover:bg-gradient-to-r hover:from-violet-100 hover:to-transparent hover:text-violet-700 transition-colors"
+      >
+        <span className="flex items-center gap-3">
+          <Icon className="text-violet-500 w-5 h-5" />
+          {title}
+        </span>
+        {open ? (
+          <ChevronDown className="w-4 h-4 text-violet-500" />
+        ) : (
+          <ChevronUp className="w-4 h-4 text-violet-500" />
+        )}
+      </button>
+
+      {open && <div className="pl-9 mt-1 space-y-1">{children}</div>}
+    </div>
   );
 };

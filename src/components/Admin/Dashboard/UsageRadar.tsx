@@ -1,5 +1,4 @@
-import React from 'react';
-import { Eye } from 'lucide-react';
+import { Eye } from "lucide-react";
 import {
   Radar,
   RadarChart,
@@ -9,50 +8,73 @@ import {
   PolarRadiusAxis,
   ResponsiveContainer,
   Tooltip,
-} from 'recharts';
+} from "recharts";
 
 const data = [
-  { feature: 'Tracking', mobile: 15, desktop: 110, max: 150 },
-  { feature: 'Builder', mobile: 130, desktop: 90, max: 150 },
-  { feature: 'Schedule', mobile: 86, desktop: 130, max: 150 },
-  { feature: 'AI Train', mobile: 125, desktop: 40, max: 150 },
-  { feature: 'Interval', mobile: 148, desktop: 90, max: 150 },
+  {
+    feature: "Tracking",
+    mobile: 15,
+    desktop: 110,
+    max: 150,
+  },
+  {
+    feature: "Builder",
+    mobile: 130,
+    desktop: 90,
+    max: 150,
+  },
+  {
+    feature: "Schedule",
+    mobile: 86,
+    desktop: 130,
+    max: 150,
+  },
+  {
+    feature: "AI Train",
+    mobile: 125,
+    desktop: 40,
+    max: 150,
+  },
+  {
+    feature: "Interval",
+    mobile: 148,
+    desktop: 90,
+    max: 150,
+  },
 ];
 
 export const UsageRadar = () => {
   return (
-    <div className="overflow-hidden rounded-lg border border-stone-300 bg-gray-800">
+    <div className="col-span-4 overflow-hidden rounded border border-stone-300">
       <div className="p-4">
-        <h3 className="flex items-center gap-1.5 font-medium text-white">
+        <h3 className="flex items-center gap-1.5 font-medium">
           <Eye /> Usage
         </h3>
       </div>
+
       <div className="h-64 px-4">
         <ResponsiveContainer width="100%" height="100%">
           <RadarChart cx="50%" cy="50%" outerRadius="80%" data={data}>
             <PolarGrid />
-            <PolarAngleAxis
-              className="text-xs font-bold text-gray-400"
-              dataKey="feature"
-            />
+            <PolarAngleAxis className="text-xs font-bold" dataKey="feature" />
             <PolarRadiusAxis angle={30} domain={[0, 150]} />
             <Radar
               name="Mobile"
               dataKey="mobile"
-              stroke="#A855F7"
-              fill="#A855F7"
+              stroke="#18181b"
+              fill="#18181b"
               fillOpacity={0.2}
             />
             <Radar
               name="Desktop"
               dataKey="desktop"
-              stroke="#A855F7"
-              fill="#A855F7"
+              stroke="#5b21b6"
+              fill="#5b21b6"
               fillOpacity={0.2}
             />
             <Tooltip
-              wrapperClassName="text-sm rounded bg-gray-700 text-white"
-              labelClassName="text-xs text-gray-300"
+              wrapperClassName="text-sm rounded"
+              labelClassName="text-xs text-stone-500"
             />
             <Legend />
           </RadarChart>
