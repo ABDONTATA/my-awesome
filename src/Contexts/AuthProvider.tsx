@@ -1,23 +1,33 @@
-import React, { useEffect, useState, useContext } from 'react';
+import React, { useEffect, useState, useContext } from "react";
 
-const baseUrl = 'http://localhost:8080';
+const baseUrl = "http://localhost:8080";
 
 type UserType = {
-  username:string;
-  email:string;
-  profilePicture:string;
-  userRole:string;
-}
+  username: string;
+  email: string;
+  profilePicture?: string;
+  userRole?: string;
+  phoneNumber?: string;
+};
 
 interface AuthContextType {
   isAuthenticated: boolean;
-  setIsAuthenticated : (isAuthenticated : boolean) => void;
+  setIsAuthenticated: (isAuthenticated: boolean) => void;
   login: (email: string, password: string) => Promise<void>;
   register: (name: string, email: string, password: string) => Promise<void>;
   logout: () => Promise<void>;
   accessToken: string | null;
-  setAccessToken : (token : string | null) => void;
-  user : UserType | null;
+  setAccessToken: (token: string | null) => void;
+  user: UserType | null;
+  updateUserData: (
+    username: string,
+    phoneNumber: string,
+    email: string
+  ) => Promise<void>;
+  updateUserPassword: (
+    currentPassword: string,
+    newPassword: string
+  ) => Promise<void>;
 }
 
 const AuthContext = React.createContext<AuthContextType | null>(null);
@@ -30,14 +40,13 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [accessToken, setAccessToken] = useState<string | null>(null);
   const [user, setUser] = useState<UserType | null>(null);
-  
 
   const login = async (email: string, password: string) => {
     try {
       const response = await fetch(`${baseUrl}/auth/login`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        credentials: 'include', 
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        credentials: "include",
         body: JSON.stringify({ email, password }),
       });
 
@@ -48,29 +57,29 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
       } else {
         setAccessToken(null);
         setIsAuthenticated(false);
-        throw new Error('Login failed');
+        throw new Error("Login failed");
       }
     } catch (error) {
       setAccessToken(null);
       setIsAuthenticated(false);
-      console.error('Login error:', error);
+      console.error("Login error:", error);
       throw error;
     }
   };
 
-  const register = async (name: string, email: string, password : string) => {
+  const register = async (name: string, email: string, password: string) => {
     try {
       const response = await fetch(`${baseUrl}/auth/registration`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        credentials: 'include',
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        credentials: "include",
         body: JSON.stringify({ username: name, email, password }),
       });
 
-      if (!response.ok) throw new Error('Registration failed');
-      console.log('Registration successful');
+      if (!response.ok) throw new Error("Registration failed");
+      console.log("Registration successful");
     } catch (error) {
-      console.error('Registration error:', error);
+      console.error("Registration error:", error);
       throw error;
     }
   };
@@ -78,8 +87,8 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
   const refreshAccessToken = async () => {
     try {
       const response = await fetch(`${baseUrl}/auth/refresh`, {
-        method: 'GET',
-        credentials: 'include',
+        method: "GET",
+        credentials: "include",
       });
 
       if (response.ok) {
@@ -87,13 +96,13 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
         setAccessToken(data.accessToken);
         setIsAuthenticated(true);
       } else {
-        console.warn('Token refresh failed with status:', response.status);
-        throw new Error('Failed to refresh token');
+        console.warn("Token refresh failed with status:", response.status);
+        throw new Error("Failed to refresh token");
       }
     } catch (error) {
       setAccessToken(null);
       setIsAuthenticated(false);
-      console.error('Refresh error:', error);
+      console.error("Refresh error:", error);
       await logout();
       throw error;
     }
@@ -102,11 +111,11 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
   const logout = async () => {
     try {
       await fetch(`${baseUrl}/auth/logout`, {
-        method: 'POST',
-        credentials: 'include',
+        method: "POST",
+        credentials: "include",
       });
     } catch (error) {
-      console.error('Logout error:', error);
+      console.error("Logout error:", error);
     } finally {
       setAccessToken(null);
       setIsAuthenticated(false);
@@ -118,18 +127,17 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
     refreshAccessToken().catch(() => {
       setIsAuthenticated(false);
     });
-  
-   const interval = setInterval(() => {
+
+    const interval = setInterval(() => {
       if (isAuthenticated) {
         refreshAccessToken().catch(() => {
-          console.warn('Token refresh failed, forcing logout');
+          console.warn("Token refresh failed, forcing logout");
         });
       }
     }, 1000 * 60 * 14);
 
     return () => clearInterval(interval);
   }, [isAuthenticated]);
-
 
   const fetchUser = async () => {
     if (!accessToken) return;
@@ -142,15 +150,15 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
       });
 
       if (!res.ok) throw new Error("Failed to fetch user");
-      const data =  await res.json();
-      return data.userData; 
+      const data = await res.json();
+      return data;
     } catch (err) {
       console.error("User fetch error:", err);
       throw err;
-    } 
+    }
   };
 
- useEffect(() => {
+  useEffect(() => {
     const fetchUserData = async () => {
       if (isAuthenticated && accessToken) {
         const userData = await fetchUser();
@@ -162,11 +170,66 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
     fetchUserData();
   }, [isAuthenticated, accessToken]);
 
+  const updateUserData = async (
+    username: string,
+    phoneNumber: string,
+    email: string
+  ) => {
+    try {
+      await fetch(`${baseUrl}/api/user/update-user`, {
+        method: "PUT",
+        headers: {
+          "content-type": "application/json",
+          Authorization: `Bearer ${accessToken}`,
+        },
+        body: JSON.stringify({
+          username,
+          email,
+          phoneNumber,
+        }),
+        credentials: "include",
+      });
+    } catch (error) {
+      console.log(error);
+    }
+  };
 
+  const updateUserPassword = async (
+    currentPassword: string,
+    newPassword: string
+  ) => {
+    try {
+      await fetch(`${baseUrl}/api/user/updatePassword`, {
+        method: "PUT",
+        headers: {
+          "content-type": "application/json",
+          Authorization: `Bearer ${accessToken}`,
+        },
+        body: JSON.stringify({
+          currentPassword,
+          newPassword,
+        }),
+        credentials: "include",
+      });
+    } catch (error) {
+      console.log(error);
+    }
+  };
 
   return (
     <AuthContext.Provider
-      value={{ isAuthenticated,setIsAuthenticated, login, register, logout, accessToken,setAccessToken, user}}
+      value={{
+        isAuthenticated,
+        setIsAuthenticated,
+        login,
+        register,
+        logout,
+        accessToken,
+        setAccessToken,
+        user,
+        updateUserData,
+        updateUserPassword,
+      }}
     >
       {children}
     </AuthContext.Provider>
@@ -175,6 +238,6 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
 
 export const useAuth = () => {
   const context = useContext(AuthContext);
-  if (!context) throw new Error('useAuth must be used within an AuthProvider');
+  if (!context) throw new Error("useAuth must be used within an AuthProvider");
   return context;
 };

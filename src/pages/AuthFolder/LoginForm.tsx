@@ -14,6 +14,7 @@ import {
 import { Checkbox } from "@/components/ui/checkbox";
 import { Mail, Lock } from "lucide-react";
 import { useAuth } from "@/Contexts/AuthProvider";
+import { toast } from "sonner";
 
 const LoginForm = () => {
   const navigate = useNavigate();
@@ -46,9 +47,11 @@ const LoginForm = () => {
     setIsLoading(true);
     try {
       await auth?.login(formData.email, formData.password);
+      toast.success("The user is logged in successfully !");
       navigate("/");
     } catch (error) {
       console.error(error);
+      toast.error("The email or the password ")
     } finally {
       setIsLoading(false);
     }

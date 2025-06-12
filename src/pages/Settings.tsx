@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { motion } from "framer-motion";
 import { Navbar } from "@/components/Navbar";
 import { Footer } from "@/components/Footer";
@@ -26,13 +26,29 @@ import {
   CreditCard,
   Settings as SettingsIcon,
 } from "lucide-react";
+import { useAuth } from "@/Contexts/AuthProvider";
+
+type UserType = {
+  username: string;
+  email: string;
+  profilePicture: string;
+  userRole: string;
+  phoneNumber: string;
+};
 
 const Settings = () => {
   const { theme, setTheme } = useTheme();
-  const [profileData, setProfileData] = useState({
-    name: "Alexander Smith",
-    email: "alex.smith@example.com",
-    phone: "+1 (555) 123-4567",
+  const [currentPassword, setCurrentPassword] = useState("");
+  const [newPassword, setNewPassword] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
+
+  const { user, updateUserData, updateUserPassword } = useAuth();
+  const [profileData, setProfileData] = useState<UserType>({
+    username: "",
+    email: "",
+    profilePicture: "",
+    userRole: "",
+    phoneNumber: "",
   });
 
   const [notifications, setNotifications] = useState({
@@ -42,18 +58,52 @@ const Settings = () => {
     weeklyNewsletter: true,
   });
 
-  const handleProfileSave = (e: React.FormEvent) => {
+  useEffect(() => {
+    if (user) {
+      setProfileData(user);
+    }
+  }, []);
+
+  const handleProfileSave = async (e: React.FormEvent) => {
     e.preventDefault();
-    toast.success("Profile updated", {
-      description: "Your profile information has been saved",
-    });
+    try {
+      await updateUserData(
+        profileData.username,
+        profileData.phoneNumber,
+        profileData.email
+      );
+      toast.success("Profile updated", {
+        description: "Your profile information has been saved",
+      });
+    } catch (error: any) {
+      console.log(error);
+      toast.error("sorry, there was an error during the update !");
+    }
   };
 
-  const handlePasswordSave = (e: React.FormEvent) => {
+  const handlePasswordSave = async (e: React.FormEvent) => {
     e.preventDefault();
-    toast.success("Password updated", {
-      description: "Your password has been changed successfully",
-    });
+
+    if (newPassword !== confirmPassword) {
+      toast.error("Passwords do not match");
+      return;
+    }
+
+    try {
+      await updateUserPassword(currentPassword, newPassword);
+      toast.success("Password updated", {
+        description: "Your password has been changed successfully",
+      });
+      
+      setCurrentPassword("");
+      setNewPassword("");
+      setConfirmPassword("");
+    } catch (error: any) {
+      console.error(error);
+      toast.error("Error updating password", {
+        description: error?.message || "Something went wrong.",
+      });
+    }
   };
 
   const handleNotificationSave = (e: React.FormEvent) => {
@@ -123,11 +173,11 @@ const Settings = () => {
                           <Label htmlFor="name">Full Name</Label>
                           <Input
                             id="name"
-                            value={profileData.name}
+                            value={profileData?.username || ""}
                             onChange={(e) =>
                               setProfileData({
                                 ...profileData,
-                                name: e.target.value,
+                                username: e.target.value,
                               })
                             }
                           />
@@ -137,7 +187,7 @@ const Settings = () => {
                           <Input
                             id="email"
                             type="email"
-                            value={profileData.email}
+                            value={profileData?.email || ""}
                             onChange={(e) =>
                               setProfileData({
                                 ...profileData,
@@ -151,11 +201,11 @@ const Settings = () => {
                           <Input
                             id="phone"
                             type="tel"
-                            value={profileData.phone}
+                            value={profileData?.phoneNumber || ""}
                             onChange={(e) =>
                               setProfileData({
                                 ...profileData,
-                                phone: e.target.value,
+                                phoneNumber: e.target.value,
                               })
                             }
                           />
@@ -185,17 +235,32 @@ const Settings = () => {
                           <Label htmlFor="current-password">
                             Current Password
                           </Label>
-                          <Input id="current-password" type="password" />
+                          <Input
+                            id="current-password"
+                            type="password"
+                            value={currentPassword}
+                            onChange={(e) => setCurrentPassword(e.target.value)}
+                          />
                         </div>
                         <div className="space-y-2">
                           <Label htmlFor="new-password">New Password</Label>
-                          <Input id="new-password" type="password" />
+                          <Input
+                            id="new-password"
+                            type="password"
+                            value={newPassword}
+                            onChange={(e) => setNewPassword(e.target.value)}
+                          />
                         </div>
                         <div className="space-y-2">
                           <Label htmlFor="confirm-password">
                             Confirm New Password
                           </Label>
-                          <Input id="confirm-password" type="password" />
+                          <Input
+                            id="confirm-password"
+                            type="password"
+                            value={confirmPassword}
+                            onChange={(e) => setConfirmPassword(e.target.value)}
+                          />
                         </div>
                       </div>
                       <Button type="submit" className="btn-luxury">
